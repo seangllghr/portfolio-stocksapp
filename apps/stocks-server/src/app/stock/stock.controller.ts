@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Stock } from '@portfolio-stocksapp/data';
 
 @Controller('stock')
 export class StockController {
   @Post()
-  create(): string {
-    return 'This action adds a new stock';
+  async create(@Body() stock: Stock) {
+    return `This action adds a new stock record for ${stock.symbol}\n`
+      + `Company Name: ${stock.name}\n`
+      + `Shares Outstanding: ${stock.sharesOutstanding}`;
   }
 
   @Get(':symbol')
@@ -12,13 +15,17 @@ export class StockController {
     return `This route will return data about ${symbol}`;
   }
 
-  @Put()
-  update(): string {
-    return 'This route will update a stock';
+  @Put(':symbol')
+  update(
+    @Param('symbol') symbol: string,
+    @Body() stock: Stock
+  ): string {
+    return `This route will update ${symbol}\n`
+      + `New stock data: ${JSON.stringify(stock)}`;
   }
 
-  @Delete()
-  delete(): string {
-    return 'This route will delete a stock';
+  @Delete(':symbol')
+  delete(@Param('symbol') symbol: string): string {
+    return `This route will delete ${symbol} from the database`;
   }
 }
