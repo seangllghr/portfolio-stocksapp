@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "data": "libs/data",
     "stocks-server": "apps/stocks-server"
   }
 }
