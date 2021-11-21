@@ -34,6 +34,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+/apps/stocks-server/src/assets/config.json
 
 # System Files
 .DS_Store

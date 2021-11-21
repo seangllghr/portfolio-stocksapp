@@ -1,0 +1,12 @@
+{
+  "connectString": {
+    "user": "[username]",
+    "pass": "[password]",
+    "host": "[hostname]",
+    "db":   "[database]",
+    "opts": [
+      "retryWrites=true",
+      "w=majority"
+    ]
+  }
+}
