@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "projects": {
+    "stocks-server": "apps/stocks-server"
+  }
+}
