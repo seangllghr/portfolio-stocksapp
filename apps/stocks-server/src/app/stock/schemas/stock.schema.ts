@@ -7,10 +7,10 @@ export type StockDocument = StockInterface & mongoose.Document;
 
 @Schema()
 export class Stock implements StockInterface {
-  @Prop()
+  @Prop({ required: true })
   symbol: string;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
   @Prop()
