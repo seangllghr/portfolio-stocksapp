@@ -1,15 +1,15 @@
 * The STOCKS Application
-
 This is the repo that will one day contain the full-stack rendition of my STOCKS
 application for my professional portfolio. Right now, it's pretty barren, but
 feel free to take a look around.
-** Project Layout
 
+** Project Layout
 Given the STOCKS Application's monorepo architecture,
   I recognize that it might be a little difficult to find things.
 Here's a quick overview of where everything is.
 I'll try to keep this updated as the project evolves,
   but it's always going to occupy a lower priority rung than improving project code.
+
 *** Overall Repo Structure
 The repo uses a monorepo structure,
   which means that the front end, back end, and any supporting libraries
@@ -22,15 +22,18 @@ Within the monorepo, there are a few important directories:
 - ~libs~ :: shared libraries used in multiple applications
 The monorepo uses Nrwl's ~nx~ tooling,
   which simplifies the process of generating, maintaining, and executing code.
+
 **** The STOCKS server
 The stocks server exists in ~apps/stocks-server~;
   it is written in Typescript using the Nest.js framework.
 At this point, the server is incomplete;
   however, it should be functional.
 Run it using the command ~nx serve stocks-server~
+
 **** The ~StockInterface~ data model
 The ~data~ library (~libs/data~) exports the ~StockInterface~ and ~IntervalInterface~;
   these interfaces enforce the data model across the application.
+
 *** ~README.org~
 I'm assuming you're familiar with READMEs,
   so I won't waste your time,
