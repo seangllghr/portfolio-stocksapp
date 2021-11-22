@@ -1,38 +1,27 @@
+import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Stock } from '@portfolio-stocksapp/data';
+import { InjectModel } from '@nestjs/mongoose'
+import { Stock, StockDocument } from './schemas/stock.schema';
+import { StockInterface } from '@portfolio-stocksapp/data';
 
 @Injectable()
 export class StockService {
-  private stocks: Stock[] = [];
+  constructor(@InjectModel(Stock.name) private stockModel: Model<StockDocument>) {}
 
-  create(stock: Stock) {
-    this.stocks.push(stock);
+  async create(stock: StockInterface): Promise<Stock> {
+    const createdStock = new this.stockModel(stock);
+    return createdStock.save();
   }
 
-  findBySymbol(symbol: string) {
-    for (const stock of this.stocks) {
-      if (stock.symbol === symbol) {
-        return stock;
-      }
-    }
+  async findBySymbol(symbol: string) {
+    return this.stockModel.find({ "symbol": symbol });
   }
 
   update(symbol: string, updateObject: Object) {
-    const stock = this.findBySymbol(symbol)
-    for (const field in updateObject) {
-      stock[field] = updateObject[field];
-    }
-    this.deleteStock(symbol);
-    this.stocks.push(stock);
-    return stock;
+    return
   }
 
-  deleteStock(symbol: string) {
-    for (let i = 0; i < this.stocks.length; i++) {
-      if (this.stocks[i].symbol === symbol) {
-        this.stocks.splice(i, 1);
-        return
-      }
-    }
+  async deleteStock(symbol: string) {
+    return this.stockModel.deleteOne({ "symbol": symbol });
   }
 }

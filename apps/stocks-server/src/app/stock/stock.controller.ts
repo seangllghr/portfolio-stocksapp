@@ -7,25 +7,28 @@ export class StockController {
   constructor(private stockService: StockService) {}
 
   @Post()
-  async create(@Body() inputStock: Stock) {
-    this.stockService.create(inputStock);
+  async create(@Body() inputStock: StockInterface) {
+    const result = await this.stockService.create(inputStock);
+    return JSON.stringify(result);
   }
 
   @Get(':symbol')
-  findBySymbol(@Param('symbol') symbol: string): string {
-    return JSON.stringify(this.stockService.findBySymbol(symbol));
+  async findBySymbol(@Param('symbol') symbol: string) {
+    let result = await this.stockService.findBySymbol(symbol)
+    return JSON.stringify(result);
   }
 
   @Put(':symbol')
   update(
     @Param('symbol') symbol: string,
-    @Body() stock: Stock
+    @Body() stock: StockInterface
   ): string {
     return JSON.stringify(this.stockService.update(symbol, stock))
   }
 
   @Delete(':symbol')
-  delete(@Param('symbol') symbol: string) {
-    this.stockService.deleteStock(symbol)
+  async delete(@Param('symbol') symbol: string) {
+    let result = await this.stockService.deleteStock(symbol)
+    return JSON.stringify(result)
   }
 }

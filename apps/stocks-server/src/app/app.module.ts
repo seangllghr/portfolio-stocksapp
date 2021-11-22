@@ -16,7 +16,10 @@ const connectString = 'mongodb+srv://'
   + `?${config.connectString.opts.join('&')}`
 
 @Module({
-  imports: [StockModule, MongooseModule.forRoot(connectString)],
+  imports: [
+    StockModule, MongooseModule.forRoot(connectString),
+    MongooseModule.forFeature([{ name: Stock.name, schema: StockSchema }])
+  ],
   controllers: [AppController, StockController],
   providers: [AppService, StockService],
 })
