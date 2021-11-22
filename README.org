@@ -68,6 +68,7 @@ By inserting line breaks at semantic boundaries,
   writers, editors, and other collaborators
   can make source text easier to work with,
   without affecting how it's seen by readers.
+
   — Mattt, /Semantic Line Breaks/
 #+end_quote
 He goes on to describe a complete specification,
