@@ -39,12 +39,13 @@ Ultimately, both formats are exceptionally competent lightweight markup language
   and they're similar enough
   that the average programmer should be able to make sense of either.
 However, ~org-mode~ is my personal preference;
-  as an Emacs user, the editor tooling for ~org-mode~ is hands-down more pleasant,
+  as an Emacs user,
+  the editor tooling for ~org-mode~ is hands-down more pleasant,
   and I've written enough Markdown over the years
   that I'm not worried about trying to build comfort.
-If you don't believe me,
-  you're welcome to check out another project of mine, [[https://github.com/seangllghr/makepaper][~makepaper~]],
-  which is a collection of scripts designed for typesetting Markdown
+In fact, Markdown was once my preference for most writing,
+  and you're welcome to check out [[https://github.com/seangllghr/makepaper][makepaper]],
+  the collection of scripts I used to use to typeset Markdown
   into traditionally-formatted academic manuscripts.
 I write my papers in ~org-mode~ and typeset exclusively with LaTeX now
   (XeLaTeX, if you want to be pedantic),
@@ -52,7 +53,7 @@ I write my papers in ~org-mode~ and typeset exclusively with LaTeX now
   so it's actually reasonable illustration of my growth with the language.
 
 I also wanted to comment about the formatting ~org-mode~ source.
-I've taken to using a variation of [[https://sembr.org][/Semantic Line Breaks/]] in my prose,
+I've taken to using a variation of [[https://sembr.org][Semantic Line Breaks]] in my prose,
   though I've included some conventions of my own invention.
 The specification's author provides a wonderfully concise explanation
   that I certainly won't improve upon:
@@ -71,18 +72,14 @@ By inserting line breaks at semantic boundaries,
 #+end_quote
 He goes on to describe a complete specification,
   and links to [[Semantic Line Breaks describe a set of conventions for using insensitive vertical whitespace to structure prose along semantic boundaries.][another article]] tracing the idea back to Brian Kernighan.
-I don't follow the spec exactly — notably,
-  I tend to hang a word on either side of em-dashed asides
-  so I can get the spacing I want,
-  and I vacillate on how aggressively
-  to enforce certain semantic boundaries and line length limits — but
-  the specification provides a great starting point.
+I don't follow the spec exactly,
+but it provides a great starting point.
 Among the authorial benefits advanced by the author,
   semantic line breaking makes source-controlling text much easier.
-Individual clauses function akin to lines of code,
-  and I also add indentation within sentences
-  to further clarify the document's semantic structure.
-The result is text broken into predictable units
+Individual phrases and clauses take the role of lines of code,
+  and indentation within sentences adds additional clarity
+  to the document's semantic structure.
+The result is text broken into predictable units,
   which controls the scope of Git commits
   by limiting the number of lines affected by a change.
 
