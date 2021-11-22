@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
 import { StockInterface } from '@portfolio-stocksapp/data';
 import { StockService } from './stock.service';
 
@@ -9,26 +9,24 @@ export class StockController {
   @Post()
   async create(@Body() inputStock: StockInterface) {
     const result = await this.stockService.create(inputStock);
-    return JSON.stringify(result);
+    return result;
   }
 
   @Get(':symbol')
   async findBySymbol(@Param('symbol') symbol: string) {
-    let result = await this.stockService.findBySymbol(symbol)
-    return JSON.stringify(result);
+    const result = await this.stockService.findBySymbol(symbol)
+    return result;
   }
 
-  @Put(':symbol')
-  update(
-    @Param('symbol') symbol: string,
-    @Body() stock: StockInterface
-  ): string {
-    return JSON.stringify(this.stockService.update(symbol, stock))
+  @Patch()
+  async update(@Body() stock: StockInterface) {
+    const result = await this.stockService.update(stock.symbol, stock)
+    return result;
   }
 
   @Delete(':symbol')
   async delete(@Param('symbol') symbol: string) {
-    let result = await this.stockService.deleteStock(symbol)
-    return JSON.stringify(result)
+    const result = await this.stockService.deleteStock(symbol)
+    return result;
   }
 }
