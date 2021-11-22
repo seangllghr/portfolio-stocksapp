@@ -72,7 +72,7 @@ By inserting line breaks at semantic boundaries,
   — Mattt, /Semantic Line Breaks/
 #+end_quote
 He goes on to describe a complete specification,
-  and links to [[Semantic Line Breaks describe a set of conventions for using insensitive vertical whitespace to structure prose along semantic boundaries.][another article]] tracing the idea back to Brian Kernighan.
+  and links to [[https://rhodesmill.org/brandon/2012/one-sentence-per-line/][another article]] tracing the idea back to Brian Kernighan.
 I don't follow the spec exactly,
 but it provides a great starting point.
 Among the authorial benefits advanced by the author,
