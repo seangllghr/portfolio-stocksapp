@@ -1,0 +1,110 @@
+* The STOCKS Application
+
+This is the repo that will one day contain the full-stack rendition of my STOCKS
+application for my professional portfolio. Right now, it's pretty barren, but
+feel free to take a look around.
+
+* Project Layout
+
+Given the STOCKS Application's monorepo architecture,
+  I recognize that it might be a little difficult to find things.
+Here's a quick overview of where everything is.
+I'll try to keep this updated as the project evolves,
+  but it's always going to occupy a lower priority rung than improving project code.
+** Overall Repo Structure
+The repo uses a monorepo structure,
+  which means that the front end, back end, and any supporting libraries
+  exist within a single monolithic repository.
+This makes sharing code and configuration between projects easier,
+  and puts all of the important pieces in the same place.
+Within the monorepo, there are a few important directories:
+- ~apps~ :: runnable applications
+- ~dist~ :: transpiled Javascript code for distribution/execution
+- ~libs~ :: shared libraries used in multiple applications
+The monorepo uses Nrwl's ~nx~ tooling,
+  which simplifies the process of generating, maintaining, and executing code.
+*** The STOCKS server
+The stocks server exists in ~apps/stocks-server~;
+  it is written in Typescript using the Nest.js framework.
+At this point, the server is incomplete;
+  however, it should be functional.
+Run it using the command ~nx serve stocks-server~
+*** The ~StockInterface~ data model
+The ~data~ library (~libs/data~) exports the ~StockInterface~ and ~IntervalInterface~;
+  these interfaces enforce the data model across the application.
+** ~README.org~
+I'm assuming you're familiar with READMEs,
+  so I won't waste your time,
+  but I want to comment a little on my choice of ~org-mode~ over Markdown.
+Ultimately, both formats are exceptionally competent lightweight markup languages,
+  and they're similar enough
+  that the average programmer should be able to make sense of either.
+However, ~org-mode~ is my personal preference;
+  as an Emacs user, the editor tooling for ~org-mode~ is hands-down more pleasant,
+  and I've written enough Markdown over the years
+  that I'm not worried about trying to build comfort.
+If you don't believe me,
+  you're welcome to check out another project of mine, [[https://github.com/seangllghr/makepaper][~makepaper~]],
+  which is a collection of scripts designed for typesetting Markdown
+  into traditionally-formatted academic manuscripts.
+I write my papers in ~org-mode~ and typeset exclusively with LaTeX now
+  (XeLaTeX, if you want to be pedantic),
+  but ~makepaper~ was one of my first adventures in server-side Javascript,
+  so it's actually reasonable illustration of my growth with the language.
+
+I also wanted to comment about the formatting ~org-mode~ source.
+I've taken to using a variation of [[https://sembr.org][/Semantic Line Breaks/]] in my prose,
+  though I've included some conventions of my own invention.
+The specification's author provides a wonderfully concise explanation
+  that I certainly won't improve upon:
+#+begin_quote
+/Semantic Line Breaks/ describe a set of conventions
+  for using insensitive vertical whitespace
+  to structure prose along semantic boundaries.
+
+[…]
+
+By inserting line breaks at semantic boundaries,
+  writers, editors, and other collaborators
+  can make source text easier to work with,
+  without affecting how it's seen by readers.
+  — Mattt, /Semantic Line Breaks/
+#+end_quote
+He goes on to describe a complete specification,
+  and links to [[Semantic Line Breaks describe a set of conventions for using insensitive vertical whitespace to structure prose along semantic boundaries.][another article]] tracing the idea back to Brian Kernighan.
+I don't follow the spec exactly — notably,
+  I tend to hang a word on either side of em-dashed asides
+  so I can get the spacing I want,
+  and I vacillate on how aggressively
+  to enforce certain semantic boundaries and line length limits — but
+  the specification provides a great starting point.
+Among the authorial benefits advanced by the author,
+  semantic line breaking makes source-controlling text much easier.
+Individual clauses function akin to lines of code,
+  and I also add indentation within sentences
+  to further clarify the document's semantic structure.
+The result is text broken into predictable units
+  which controls the scope of Git commits
+  by limiting the number of lines affected by a change.
+
+I don't expect anyone else to be making substantial changes to this project
+  (particularly not to the documentation)
+  but, on the off chance someone stumbles on this and takes interest,
+  the basic rules I follow are:
+  - Avoid lines longer than ≈80 characters
+  - Break lines at the following natural semantic boundaries
+      (in descending order of preference):
+    - at the end of each sentence
+    - after commas
+    - before and after longer parentheticals (> 30–40 characters)
+      - for parentheticals set off with em dashes,
+          break after the first word after the em dash
+          to preserve spacing around the dash
+        - In running prose,
+            I prefer to space em dashes using Unicode thin spaces
+        - If I can't use thin spaces,
+            I prefer flush em dashes to word-spaced em dashes
+            (Chicago style)
+    - after inline lists
+    - after a dependent clause (before the predicate verb)
+  - Indent all lines that do not begin a new sentence by 4 spaces
