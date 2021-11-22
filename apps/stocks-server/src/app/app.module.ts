@@ -7,6 +7,8 @@ import { StockController } from './stock/stock.controller';
 import { StockModule } from './stock/stock.module';
 import { StockService } from './stock/stock.service';
 import * as config from '../assets/config.json'
+import { Stock } from './stock/schemas/stock.schema';
+import { StockSchema } from './stock/schemas/stock.schema';
 
 const connectString = 'mongodb+srv://'
   + `${config.connectString.user}:${config.connectString.pass}`

@@ -1,5 +1,7 @@
-import { Stock } from './stock.interface'
+import { StockInterface } from './stock.interface'
+import { IntervalInterface } from './interval.interface'
 
 export {
-  Stock
+  StockInterface,
+  IntervalInterface
 }

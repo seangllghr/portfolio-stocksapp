@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
-import { Stock } from '@portfolio-stocksapp/data';
+import { StockInterface } from '@portfolio-stocksapp/data';
 import { StockService } from './stock.service';
 
 @Controller('stock')
