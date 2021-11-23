@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'data',
-  preset: '../../jest.preset.js',
+  displayName: 'shared-data-model',
+  preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -10,5 +10,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/data',
+  coverageDirectory: '../../../coverage/libs/shared/data-model',
 };

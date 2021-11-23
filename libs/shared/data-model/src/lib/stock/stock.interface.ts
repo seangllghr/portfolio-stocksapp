@@ -1,6 +1,6 @@
-import { IntervalInterface } from './interval.interface'
+import { IntervalInterface } from './interval.interface';
 
-export interface StockInterface {
+export interface Stock {
   symbol: string;
   name: string;
   sharesOutstanding: number;

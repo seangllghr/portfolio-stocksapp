@@ -1,20 +1,20 @@
 {
-  "root": "libs/data",
-  "sourceRoot": "libs/data/src",
+  "root": "libs/shared/data-model",
+  "sourceRoot": "libs/shared/data-model/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/data/**/*.ts"]
+        "lintFilePatterns": ["libs/shared/data-model/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/data"],
+      "outputs": ["coverage/libs/shared/data-model"],
       "options": {
-        "jestConfig": "libs/data/jest.config.js",
+        "jestConfig": "libs/shared/data-model/jest.config.js",
         "passWithNoTests": true
       }
     }

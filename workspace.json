@@ -1,7 +1,7 @@
 {
   "version": 2,
   "projects": {
-    "data": "libs/data",
+    "shared-data-model": "libs/shared/data-model",
     "stocks-server": "apps/stocks-server"
   }
 }

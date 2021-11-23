@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@portfolio-stocksapp/data": ["libs/data/src/index.ts"]
+      "@portfolio-stocksapp/shared-data-model": [
+        "libs/shared/data-model/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

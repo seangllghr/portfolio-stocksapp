@@ -1,12 +1,12 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import * as mongoose from 'mongoose';
-import { StockInterface } from "@portfolio-stocksapp/data"
-import { Interval } from "./interval.schema";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Stock } from '@portfolio-stocksapp/shared-data-model';
+import { Document } from 'mongoose';
+import { Interval } from './interval.schema';
 
-export type StockDocument = StockInterface & mongoose.Document;
+export type StockDocument = Stock & Document;
 
 @Schema()
-export class Stock implements StockInterface {
+export class StockRecord implements Stock {
   @Prop({ required: true })
   symbol: string;
 
@@ -17,7 +17,7 @@ export class Stock implements StockInterface {
   sharesOutstanding: number;
 
   @Prop()
-  priceHistory: Interval[]
+  priceHistory: Interval[];
 }
 
-export const StockSchema = SchemaFactory.createForClass(Stock);
+export const StockSchema = SchemaFactory.createForClass(StockRecord);

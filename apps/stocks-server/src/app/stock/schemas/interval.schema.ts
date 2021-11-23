@@ -1,6 +1,6 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
-import { IntervalInterface } from "@portfolio-stocksapp/data"
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IntervalInterface } from '@portfolio-stocksapp/shared-data-model';
+import { Document } from 'mongoose';
 
 export type StockDocument = Interval & Document;
 
