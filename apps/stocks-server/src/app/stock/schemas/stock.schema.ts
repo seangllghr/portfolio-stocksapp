@@ -14,6 +14,12 @@ export class Stock implements StockInterface {
   name: string;
 
   @Prop()
+  industry: string;
+
+  @Prop()
+  eps: number;
+
+  @Prop()
   sharesOutstanding: number;
 
   @Prop()
