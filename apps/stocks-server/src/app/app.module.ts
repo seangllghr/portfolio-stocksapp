@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as config from '../assets/config.json';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StockRecord, StockSchema } from './stock/schemas/stock.schema';
+import { Stock, StockSchema } from './stock/schemas/stock.schema';
 import { StockController } from './stock/stock.controller';
 import { StockModule } from './stock/stock.module';
 import { StockService } from './stock/stock.service';
@@ -17,7 +17,7 @@ const connectString = 'mongodb+srv://'
 @Module({
   imports: [
     StockModule, MongooseModule.forRoot(connectString),
-    MongooseModule.forFeature([{ name: StockRecord.name, schema: StockSchema }])
+    MongooseModule.forFeature([{ name: Stock.name, schema: StockSchema }])
   ],
   controllers: [AppController, StockController],
   providers: [AppService, StockService],

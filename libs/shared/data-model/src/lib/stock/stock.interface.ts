@@ -1,8 +1,8 @@
 import { IntervalInterface } from './interval.interface';
 
-export interface Stock {
+export interface StockInterface {
   symbol: string;
   name: string;
-  sharesOutstanding: number;
-  priceHistory: IntervalInterface[];
+  sharesOutstanding?: number;
+  priceHistory?: IntervalInterface[];
 }

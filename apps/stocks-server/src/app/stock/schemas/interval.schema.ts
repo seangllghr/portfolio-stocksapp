@@ -6,22 +6,22 @@ export type StockDocument = Interval & Document;
 
 @Schema()
 export class Interval implements IntervalInterface {
-  @Prop()
+  @Prop({ required: true })
   interval: Date;
 
-  @Prop()
+  @Prop({ required: true })
   open: number;
 
-  @Prop()
+  @Prop({ required: true })
   high: number;
 
-  @Prop()
+  @Prop({ required: true })
   low: number;
 
-  @Prop()
+  @Prop({ required: true })
   close: number;
 
-  @Prop()
+  @Prop({ required: true })
   volume: number;
 }
 
