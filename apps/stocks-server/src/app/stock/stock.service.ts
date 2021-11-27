@@ -11,7 +11,7 @@ export class StockService {
   ) {}
 
   async create(stock: StockInterface) {
-    if (await this.stockModel.findOne({ symbol: stock.symbol })) {
+    if (await this.stockModel.findOne({ Symbol: stock.Symbol })) {
       throw new BadRequestException('Stock already exists.');
     }
     const createdStock = new this.stockModel(stock);
@@ -19,7 +19,7 @@ export class StockService {
   }
 
   async findBySymbol(symbol: string) {
-    const result = await this.stockModel.findOne({ symbol: symbol });
+    const result = await this.stockModel.findOne({ Symbol: symbol });
     if (result) {
       return result;
     } else {
@@ -29,7 +29,7 @@ export class StockService {
 
   async update(symbol: string, updateObject: Object) {
     const result = await this.stockModel.updateOne(
-      { symbol: symbol },
+      { Symbol: symbol },
       updateObject
     );
     if (result.modifiedCount > 0) {
@@ -42,7 +42,7 @@ export class StockService {
   }
 
   async deleteStock(symbol: string) {
-    const result = await this.stockModel.deleteOne({ symbol: symbol });
+    const result = await this.stockModel.deleteOne({ Symbol: symbol });
     if (result.deletedCount > 0) {
       return result;
     } else {

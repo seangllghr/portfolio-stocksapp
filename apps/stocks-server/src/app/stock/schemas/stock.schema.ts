@@ -6,19 +6,19 @@ import { Interval } from './interval.schema';
 @Schema()
 export class Stock extends Document implements StockInterface {
   @Prop({ required: true })
-  symbol: string;
+  Symbol: string;
 
   @Prop({ required: true })
-  name: string;
+  Name: string;
 
   @Prop()
-  industry: string;
+  Industry: string;
 
   @Prop()
-  eps: number;
+  EPS: number;
 
   @Prop()
-  sharesOutstanding: number;
+  SharesOutstanding: number;
 
   @Prop()
   priceHistory: Interval[];

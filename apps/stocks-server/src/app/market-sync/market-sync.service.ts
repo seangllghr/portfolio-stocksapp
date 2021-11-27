@@ -65,10 +65,10 @@ export class MarketSyncService {
    */
   async runOverviewUpdate(): Promise<void> {
     const existingRecord = await this.stockModel.findOne({
-      symbol: this.symbols[this.currentSymbol]
+      Symbol: this.symbols[this.currentSymbol]
     })
     if (existingRecord) {
-      console.log(`Overview update found existing record for ${existingRecord.name}`);
+      console.log(`Overview update found existing record for ${existingRecord.Name}`);
     } else {
       const queryString = 'https://alphavantage.co/query?function=OVERVIEW'
         + `&symbol=${this.symbols[this.currentSymbol]}`

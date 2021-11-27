@@ -11,15 +11,15 @@ export class ReportService {
 
   async generateIndustryReport(industry: string) {
     const pipeline = [
-      { $match: { 'industry': industry } },
-      { $sort: { 'eps': -1 } },
+      { $match: { 'Industry': industry } },
+      { $sort: { 'EPS': -1 } },
       { $limit: 5 }
     ]
     return await this.stockModel.aggregate(pipeline)
   }
 
   async generateStockReport(symbols: string[]) {
-    return await this.stockModel.find({ symbol: {$in: symbols} })
+    return await this.stockModel.find({ Symbol: {$in: symbols} })
   }
 
 }

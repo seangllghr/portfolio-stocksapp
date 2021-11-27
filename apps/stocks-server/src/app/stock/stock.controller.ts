@@ -20,7 +20,7 @@ export class StockController {
 
   @Patch()
   async update(@Body() stock: StockInterface) {
-    const result = await this.stockService.update(stock.symbol, stock);
+    const result = await this.stockService.update(stock.Symbol, stock);
     return result;
   }
 

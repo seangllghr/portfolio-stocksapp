@@ -1,10 +1,10 @@
 import { IntervalInterface } from './interval.interface';
 
 export interface StockInterface {
-  symbol: string;
-  name: string;
-  industry: string;
-  eps: number;
-  sharesOutstanding?: number;
+  Symbol: string;
+  Name: string;
+  Industry: string;
+  EPS: number;
+  SharesOutstanding?: number;
   priceHistory?: IntervalInterface[];
 }
