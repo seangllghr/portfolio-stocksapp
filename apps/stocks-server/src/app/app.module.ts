@@ -8,6 +8,7 @@ import { StockController } from './stock/stock.controller';
 import { StockModule } from './stock/stock.module';
 import { StockService } from './stock/stock.service';
 import { ReportModule } from './report/report.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const connectString = 'mongodb+srv://'
   + `${config.connectString.user}:${config.connectString.pass}`
@@ -20,6 +21,7 @@ const connectString = 'mongodb+srv://'
     MongooseModule.forRoot(connectString),
     MongooseModule.forFeature([{ name: Stock.name, schema: StockSchema }]),
     ReportModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [AppController, StockController],
   providers: [AppService, StockService],

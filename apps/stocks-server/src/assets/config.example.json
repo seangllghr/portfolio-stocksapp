@@ -8,5 +8,9 @@
       "retryWrites=true",
       "w=majority"
     ]
+  },
+  "upstreamAPI": {
+    "root": "https://www.alphavantage.co",
+    "key": "[API Key]"
   }
 }
