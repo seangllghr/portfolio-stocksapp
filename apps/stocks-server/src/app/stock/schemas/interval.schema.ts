@@ -2,10 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IntervalInterface } from '@portfolio-stocksapp/shared-data-model';
 import { Document } from 'mongoose';
 
-export type StockDocument = Interval & Document;
-
 @Schema()
-export class Interval implements IntervalInterface {
+export class Interval extends Document implements IntervalInterface {
   @Prop({ required: true })
   interval: Date;
 

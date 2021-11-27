@@ -3,10 +3,8 @@ import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
 import { Document } from 'mongoose';
 import { Interval } from './interval.schema';
 
-export type StockDocument = StockInterface & Document;
-
 @Schema()
-export class Stock implements StockInterface {
+export class Stock extends Document implements StockInterface {
   @Prop({ required: true })
   symbol: string;
 

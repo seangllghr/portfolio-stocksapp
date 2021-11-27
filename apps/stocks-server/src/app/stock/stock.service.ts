@@ -2,12 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
 import { Model } from 'mongoose';
-import { StockDocument, Stock } from './schemas/stock.schema';
+import { Stock } from './schemas/stock.schema';
 
 @Injectable()
 export class StockService {
   constructor(
-    @InjectModel(Stock.name) private stockModel: Model<StockDocument>
+    @InjectModel(Stock.name) private stockModel: Model<Stock>
   ) {}
 
   async create(stock: StockInterface) {
