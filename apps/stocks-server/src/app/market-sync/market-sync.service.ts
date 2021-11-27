@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron } from '@nestjs/schedule';
 import { Model } from 'mongoose';
@@ -68,7 +68,7 @@ export class MarketSyncService {
       Symbol: this.symbols[this.currentSymbol]
     })
     if (existingRecord) {
-      console.log(`Overview update found existing record for ${existingRecord.Name}`);
+      Logger.debug(`Overview update found existing record for ${existingRecord.Name}`);
     } else {
       const queryString = 'https://alphavantage.co/query?function=OVERVIEW'
         + `&symbol=${this.symbols[this.currentSymbol]}`
@@ -76,12 +76,12 @@ export class MarketSyncService {
       const response = await firstValueFrom(this.httpService.get(queryString))
       const overviewData = response.data
       await this.stockModel.insertMany(overviewData)
-      console.log(`Added ${overviewData.Name} to the database`)
+      Logger.debug(`Added ${overviewData.Name} to the database`)
     }
   }
 
   async runTimeSeriesUpdate(): Promise<void> {
-    console.log(`Time Series update: ${this.symbols[this.currentSymbol]}`)
+    Logger.debug(`Time Series update: ${this.symbols[this.currentSymbol]}`)
   }
 
 }

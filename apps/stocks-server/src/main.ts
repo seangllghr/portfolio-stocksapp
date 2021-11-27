@@ -3,13 +3,18 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, LogLevel, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
+import * as config from './assets/config.json';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logLevels: LogLevel[] = ['log', 'warn', 'error'];
+  if (config.debug) logLevels.push('debug');
+  const app = await NestFactory.create(AppModule, {
+    logger: logLevels
+  });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3333;
