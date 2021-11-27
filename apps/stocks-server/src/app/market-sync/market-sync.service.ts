@@ -15,9 +15,9 @@ export class MarketSyncService {
   ) {}
 
   private readonly symbols: string[] = ['TSLA', 'AAPL', 'GOOG', 'IBM', ];
-  private currentSymbol: number = 0;
+  private currentSymbolIdx: number = 0;
   private updateSteps: string[] = ['overview', 'time series']
-  private currentStep: number = 0;
+  private currentStepIdx: number = 0;
 
   /**
    * Declare an update task with a tick rate of one per 12 seconds (5/min).
@@ -35,23 +35,25 @@ export class MarketSyncService {
    * This code executes the appropriate update action at each update tick
    */
   async runNextUpdate(): Promise<void> {
-    switch (this.updateSteps[this.currentStep]) {
+    const currentStep = this.updateSteps[this.currentStepIdx]
+    const currentSymbol = this.symbols[this.currentSymbolIdx]
+    switch (currentStep) {
       // A switch statement here allows us to expand the update cycle as the
       // data model evolves. We switch on the string value for readability.
       case 'overview':
-        await this.runOverviewUpdate(this.symbols[this.currentSymbol]);
-        this.currentStep++;
+        await this.runOverviewUpdate(currentSymbol);
+        this.currentStepIdx++;
         break;
       case 'time series':
-        await this.runTimeSeriesUpdate();
-        this.currentStep = 0;
-        this.currentSymbol = (this.currentSymbol < this.symbols.length - 1)
-          ? this.currentSymbol + 1
+        await this.runTimeSeriesUpdate(currentSymbol);
+        this.currentStepIdx = 0;
+        this.currentSymbolIdx =
+          (this.currentSymbolIdx < this.symbols.length - 1)
+          ? this.currentSymbolIdx + 1
           : 0;
         break;
       default:
-        const errorMessage = `'${this.updateSteps[this.currentStep]}'`
-          + ' is not a valid update step.'
+        const errorMessage = `'${currentStep}' is not a valid update step.`
           + ` Valid steps are: '${this.updateSteps.join(', ')}'`;
         throw new RangeError(errorMessage);
     }
@@ -78,8 +80,16 @@ export class MarketSyncService {
     }
   }
 
-  async runTimeSeriesUpdate(): Promise<void> {
-    Logger.debug(`Time Series update: ${this.symbols[this.currentSymbol]}`)
+  /**
+   * Update stock price history array
+   *
+   * For now, we're just overwriting the existing price history. This has two
+   * advantages: (a) we're running the current application against a MongoDB
+   * Atlas test cluster with a whopping 512MB of storage, so overwriting is more
+   * space-efficient; (b) frankly, it's easier.
+   */
+  async runTimeSeriesUpdate(symbol: string): Promise<void> {
+    Logger.debug(`Time Series update: ${symbol}`)
   }
 
 }
