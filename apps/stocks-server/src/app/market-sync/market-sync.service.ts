@@ -39,7 +39,7 @@ export class MarketSyncService {
       // A switch statement here allows us to expand the update cycle as the
       // data model evolves. We switch on the string value for readability.
       case 'overview':
-        await this.runOverviewUpdate();
+        await this.runOverviewUpdate(this.symbols[this.currentSymbol]);
         this.currentStep++;
         break;
       case 'time series':
@@ -63,16 +63,14 @@ export class MarketSyncService {
    * For now, we only update company overview data when the company doesn't yet
    * exist in the database.
    */
-  async runOverviewUpdate(): Promise<void> {
-    const existingRecord = await this.stockModel.findOne({
-      Symbol: this.symbols[this.currentSymbol]
-    })
+  async runOverviewUpdate(symbol: string): Promise<void> {
+    const existingRecord = await this.stockModel.findOne({Symbol: symbol})
     if (existingRecord) {
-      Logger.debug(`Overview update found existing record for ${existingRecord.Name}`);
+      Logger.debug(`Overview update found existing record for ${symbol}`);
     } else {
       const queryString = 'https://alphavantage.co/query?function=OVERVIEW'
-        + `&symbol=${this.symbols[this.currentSymbol]}`
-        + `&apikey=${config.upstreamAPI.key}`
+        + `&symbol=${symbol}`
+        + `&apikey=${config.upstreamAPI.key}`;
       const response = await firstValueFrom(this.httpService.get(queryString))
       const overviewData = response.data
       await this.stockModel.insertMany(overviewData)
