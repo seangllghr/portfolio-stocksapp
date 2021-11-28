@@ -1,12 +1,22 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cron } from '@nestjs/schedule';
+import { Cron, Timeout } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import * as csv from 'csv/sync';
 import { firstValueFrom } from 'rxjs';
 import * as config from '../../assets/config.json';
 import { Stock } from '../stock/schemas/stock.schema';
+
+enum UpdateType {
+  Overview = 1,
+  TimeSeries
+}
+
+interface UpdateObject {
+  updateType: UpdateType,
+  symbol: string,
+}
 
 @Injectable()
 export class MarketSyncService {
@@ -16,12 +26,10 @@ export class MarketSyncService {
   ) {}
 
   private readonly symbols: string[] = ['TSLA', 'AAPL', 'GOOG', 'IBM', ];
-  private currentSymbolIdx: number = 0;
-  private updateSteps: string[] = ['overview', 'time series']
-  private currentStepIdx: number = 0;
+  private updateQueue: UpdateObject[] = [];
 
   /**
-   * Declare an update task with a tick rate of one per 12 seconds (5/min).
+   * Declare a cron job to run the next update task in the queue.
    *
    * NOTE: AlphaVantage, the API we're using for market data, has a limit of
    * 5 API calls per minute at its free tier. Thus, our update service is built
@@ -33,30 +41,66 @@ export class MarketSyncService {
   }
 
   /**
+   * Initialize update queueing
+   */
+  @Timeout(500)
+  async initUpdateQueue() {
+    Logger.log('Initializing update queue');
+    const numUpdates = await this.populateUpdateQueue();
+    Logger.log(`Queued ${numUpdates} updates`);
+  }
+
+  /**
+   * Populate update queue with update objects, to be processed by runNextUpdate
+   */
+  async populateUpdateQueue(): Promise<number> {
+    if (this.updateQueue.length > 0) return 0; // return if queue not empty
+    let numUpdates = 0;
+
+    // Loop through the symbols array, locate each one in the database,
+    // and add the appropriate update tasks to the queue.
+    for (const symbol of this.symbols) {
+      Logger.debug(`Queueing updates for ${symbol}`);
+      const existingRecord = await this.stockModel.findOne({Symbol: symbol});
+      if (!existingRecord) {
+        this.updateQueue.push({
+          updateType: UpdateType.Overview,
+          symbol: symbol
+        });
+        Logger.debug(`Queued overview update for ${symbol}`);
+        numUpdates++;
+      }
+      this.updateQueue.push({
+        updateType: UpdateType.TimeSeries,
+        symbol: symbol
+      });
+      Logger.debug(`Queued time series update for ${symbol}`);
+      numUpdates++;
+    }
+    return numUpdates;
+  }
+
+  /**
    * This code executes the appropriate update action at each update tick
    */
   async runNextUpdate(): Promise<void> {
-    const currentStep = this.updateSteps[this.currentStepIdx]
-    const currentSymbol = this.symbols[this.currentSymbolIdx]
-    switch (currentStep) {
+    if (this.updateQueue.length == 0) {
+      this.populateUpdateQueue();
+      return;
+    }
+    const updateSpec = this.updateQueue.shift();
+    switch (updateSpec.updateType) {
       // A switch statement here allows us to expand the update cycle as the
       // data model evolves. We switch on the string value for readability.
-      case 'overview':
-        await this.runOverviewUpdate(currentSymbol);
-        this.currentStepIdx++;
+      case UpdateType.Overview:
+        await this.runOverviewUpdate(updateSpec.symbol);
         break;
-      case 'time series':
-        await this.runTimeSeriesUpdate(currentSymbol);
-        this.currentStepIdx = 0;
-        this.currentSymbolIdx =
-          (this.currentSymbolIdx < this.symbols.length - 1)
-          ? this.currentSymbolIdx + 1
-          : 0;
+      case UpdateType.TimeSeries:
+        await this.runTimeSeriesUpdate(updateSpec.symbol);
         break;
       default:
-        const errorMessage = `'${currentStep}' is not a valid update step.`
-          + ` Valid steps are: '${this.updateSteps.join(', ')}'`;
-        throw new RangeError(errorMessage);
+        // This should be unreachable, because enums, but it doesn't hurt
+        throw new RangeError('Invalid update type');
     }
   }
 
@@ -113,6 +157,10 @@ export class MarketSyncService {
       Logger.debug(`Updated time series for ${symbol}`);
     } else {
       Logger.debug(`${symbol} not found in local db. Deferring time series update.`);
+      this.updateQueue.push({
+        updateType: UpdateType.TimeSeries,
+        symbol: symbol
+      });
     }
   }
 
