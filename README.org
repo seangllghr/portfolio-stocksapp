@@ -30,6 +30,20 @@ At this point, the server is incomplete;
   however, it should be functional.
 Run it using the command ~nx serve stocks-server~
 
+***** The Third-Party Marked Data Service
+The aptly-named ~market-sync~ module adds a service
+  which updates the stock data on the local server
+  using data obtained from a third-party provider.
+In its current form,
+  the service pulls a list of stocks from the application's ~assets/config.json~
+  and updates company overview or price history data
+  for one stock every 12 seconds — the
+  API request rate limit for our third-party provider, [[https://alphavantage.co/][AlphaVantage]].
+Once the WebSTOCKS front-end is built,
+  this data will be migrated into the database itself,
+  and users will be able to query the upstream provider
+  to add additional stocks to the database.
+
 **** The ~StockInterface~ data model
 The ~data~ library (~libs/data~) exports the ~StockInterface~ and ~IntervalInterface~;
   these interfaces enforce the data model across the application.
