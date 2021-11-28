@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron } from '@nestjs/schedule';
 import { Model } from 'mongoose';
+import * as csv from 'csv/sync';
 import { firstValueFrom } from 'rxjs';
 import * as config from '../../assets/config.json';
 import { Stock } from '../stock/schemas/stock.schema';
@@ -70,10 +71,10 @@ export class MarketSyncService {
     if (existingRecord) {
       Logger.debug(`Overview update found existing record for ${symbol}`);
     } else {
-      const queryString = 'https://alphavantage.co/query?function=OVERVIEW'
+      const queryUri = 'https://alphavantage.co/query?function=OVERVIEW'
         + `&symbol=${symbol}`
         + `&apikey=${config.upstreamAPI.key}`;
-      const response = await firstValueFrom(this.httpService.get(queryString))
+      const response = await firstValueFrom(this.httpService.get(queryUri))
       const overviewData = response.data
       await this.stockModel.insertMany(overviewData)
       Logger.debug(`Added ${overviewData.Name} to the database`)
@@ -89,7 +90,30 @@ export class MarketSyncService {
    * space-efficient; (b) frankly, it's easier.
    */
   async runTimeSeriesUpdate(symbol: string): Promise<void> {
-    Logger.debug(`Time Series update: ${symbol}`)
+    const existingRecord = await this.stockModel.findOne({Symbol: symbol});
+    if (existingRecord) {
+      const queryUri = 'https://alphavantage.co/query?function=TIME_SERIES_DAILY'
+        + `&symbol=${symbol}`
+        + '&interval=30min&outputsize=full&datatype=csv'
+        + `&apikey=${config.upstreamAPI.key}`;
+      const response = await firstValueFrom(this.httpService.get(queryUri));
+      const timeSeriesData = csv.parse(response.data, {
+        columns: true,
+        cast: (value, context) => {
+          if (context.header) return value;
+          if (context.column === 'timestamp') {
+            return Date.parse(value);
+          } else {
+            return Number.parseFloat(value);
+          }
+        }
+      });
+      existingRecord.priceHistory = timeSeriesData
+      await existingRecord.save()
+      Logger.debug(`Updated time series for ${symbol}`);
+    } else {
+      Logger.debug(`${symbol} not found in local db. Deferring time series update.`);
+    }
   }
 
 }
