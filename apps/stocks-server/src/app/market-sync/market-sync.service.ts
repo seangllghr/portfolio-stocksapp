@@ -10,12 +10,12 @@ import { Stock } from '../stock/schemas/stock.schema';
 
 enum UpdateType {
   Overview = 1,
-  TimeSeries
+  TimeSeries,
 }
 
 interface UpdateObject {
-  updateType: UpdateType,
-  symbol: string,
+  updateType: UpdateType;
+  symbol: string;
 }
 
 @Injectable()
@@ -25,7 +25,7 @@ export class MarketSyncService {
     private httpService: HttpService
   ) {}
 
-  private readonly symbols: string[] = ['TSLA', 'AAPL', 'GOOG', 'IBM', ];
+  private readonly symbols: string[] = ['TSLA', 'AAPL', 'GOOG', 'IBM'];
   private updateQueue: UpdateObject[] = [];
 
   /**
@@ -61,18 +61,18 @@ export class MarketSyncService {
     // and add the appropriate update tasks to the queue.
     for (const symbol of this.symbols) {
       Logger.debug(`Queueing updates for ${symbol}`);
-      const existingRecord = await this.stockModel.findOne({Symbol: symbol});
+      const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
       if (!existingRecord) {
         this.updateQueue.push({
           updateType: UpdateType.Overview,
-          symbol: symbol
+          symbol: symbol,
         });
         Logger.debug(`Queued overview update for ${symbol}`);
         numUpdates++;
       }
       this.updateQueue.push({
         updateType: UpdateType.TimeSeries,
-        symbol: symbol
+        symbol: symbol,
       });
       Logger.debug(`Queued time series update for ${symbol}`);
       numUpdates++;
@@ -111,17 +111,18 @@ export class MarketSyncService {
    * exist in the database.
    */
   async runOverviewUpdate(symbol: string): Promise<void> {
-    const existingRecord = await this.stockModel.findOne({Symbol: symbol})
+    const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
     if (existingRecord) {
       Logger.debug(`Overview update found existing record for ${symbol}`);
     } else {
-      const queryUri = 'https://alphavantage.co/query?function=OVERVIEW'
-        + `&symbol=${symbol}`
-        + `&apikey=${config.upstreamAPI.key}`;
-      const response = await firstValueFrom(this.httpService.get(queryUri))
-      const overviewData = response.data
-      await this.stockModel.insertMany(overviewData)
-      Logger.debug(`Added ${overviewData.Name} to the database`)
+      const queryUri =
+        'https://alphavantage.co/query?function=OVERVIEW' +
+        `&symbol=${symbol}` +
+        `&apikey=${config.upstreamAPI.key}`;
+      const response = await firstValueFrom(this.httpService.get(queryUri));
+      const overviewData = response.data;
+      await this.stockModel.insertMany(overviewData);
+      Logger.debug(`Added ${overviewData.Name} to the database`);
     }
   }
 
@@ -134,9 +135,10 @@ export class MarketSyncService {
    * space-efficient; (b) frankly, it's easier.
    */
   async runTimeSeriesUpdate(symbol: string): Promise<void> {
-    const existingRecord = await this.stockModel.findOne({Symbol: symbol});
+    const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
     if (existingRecord) {
-      const queryUri = 'https://alphavantage.co/query?function=TIME_SERIES_DAILY'
+      const queryUri =
+        'https://alphavantage.co/query?function=TIME_SERIES_DAILY'
         + `&symbol=${symbol}`
         + '&interval=30min&outputsize=full&datatype=csv'
         + `&apikey=${config.upstreamAPI.key}`;
@@ -150,18 +152,19 @@ export class MarketSyncService {
           } else {
             return Number.parseFloat(value);
           }
-        }
+        },
       });
-      existingRecord.priceHistory = timeSeriesData
-      await existingRecord.save()
+      existingRecord.priceHistory = timeSeriesData;
+      await existingRecord.save();
       Logger.debug(`Updated time series for ${symbol}`);
     } else {
-      Logger.debug(`${symbol} not found in local db. Deferring time series update.`);
+      Logger.debug(
+        `${symbol} not found in local db. Deferring time series update.`
+      );
       this.updateQueue.push({
         updateType: UpdateType.TimeSeries,
-        symbol: symbol
+        symbol: symbol,
       });
     }
   }
-
 }
