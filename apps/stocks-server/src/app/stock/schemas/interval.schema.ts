@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 @Schema()
 export class Interval extends Document implements IntervalInterface {
   @Prop({ required: true })
-  interval: Date;
+  timestamp: Date;
 
   @Prop({ required: true })
   open: number;

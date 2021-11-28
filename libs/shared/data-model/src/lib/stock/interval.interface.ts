@@ -1,5 +1,5 @@
 export interface IntervalInterface {
-  interval: Date;
+  timestamp: Date;
   open: number;
   high: number;
   low: number;
