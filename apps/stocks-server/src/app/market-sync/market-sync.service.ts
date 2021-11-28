@@ -25,7 +25,6 @@ export class MarketSyncService {
     private httpService: HttpService
   ) {}
 
-  private readonly symbols: string[] = ['TSLA', 'AAPL', 'GOOG', 'IBM'];
   private updateQueue: UpdateObject[] = [];
 
   /**
@@ -59,7 +58,7 @@ export class MarketSyncService {
 
     // Loop through the symbols array, locate each one in the database,
     // and add the appropriate update tasks to the queue.
-    for (const symbol of this.symbols) {
+    for (const symbol of config.stocks) {
       Logger.debug(`Queueing updates for ${symbol}`);
       const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
       if (!existingRecord) {

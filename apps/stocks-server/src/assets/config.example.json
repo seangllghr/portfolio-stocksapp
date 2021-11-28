@@ -13,5 +13,6 @@
   "upstreamAPI": {
     "root": "https://www.alphavantage.co",
     "key": "[API Key]"
-  }
+  },
+  "stocks": ["SYMB"]
 }
