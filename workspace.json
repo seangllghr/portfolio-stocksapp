@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "shared-data-model": "libs/shared/data-model",
-    "stocks-server": "apps/stocks-server"
+    "stocks-server": "apps/stocks-server",
+    "webstocks-client": "apps/webstocks-client"
   }
 }
