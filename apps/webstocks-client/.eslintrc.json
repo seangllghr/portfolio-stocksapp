@@ -21,7 +21,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "portfolio-stocksapp",
+            "prefix": "webstocks",
             "style": "kebab-case"
           }
         ]

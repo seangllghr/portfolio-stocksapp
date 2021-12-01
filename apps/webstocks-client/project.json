@@ -2,7 +2,7 @@
   "projectType": "application",
   "root": "apps/webstocks-client",
   "sourceRoot": "apps/webstocks-client/src",
-  "prefix": "portfolio-stocksapp",
+  "prefix": "webstocks",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
