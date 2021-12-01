@@ -1,0 +1,22 @@
+@import '~/src/variables.scss';
+nav {
+  @include ui-border;
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+
+  h1 {
+    margin: 0rem;
+  }
+
+  img {
+    height: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .spacer {
+    height: 100%;
+    flex-grow: 1;
+  }
+}
