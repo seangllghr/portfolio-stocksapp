@@ -6,10 +6,11 @@ import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faPlus, faHome } from '@fortawesome/free-solid-svg-icons';
-import { IconButtonComponent } from './components/icon-button/icon-button.component';
+import { ListPanelComponent } from './components/layout/list-panel/list-panel.component';
+import { MainPanelComponent } from './components/layout/main-panel/main-panel.component';
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, IconButtonComponent],
+  declarations: [AppComponent, NavbarComponent, ListPanelComponent, MainPanelComponent],
   imports: [
     BrowserModule,
     RouterModule.forRoot([], { initialNavigation: 'enabledBlocking' }),

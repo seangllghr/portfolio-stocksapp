@@ -44,7 +44,8 @@ $palette-orange:   #d65d0e;
 $palette-orange-b: #fe8019;
 
 @mixin ui-border {
-	border: .125rem solid $palette-fg3;
+  border-color: $palette-fg3;
+  border-style: solid;
 }
 
 @mixin ui-dark {

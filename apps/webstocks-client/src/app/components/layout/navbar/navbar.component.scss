@@ -1,22 +1,27 @@
 @import '~/src/variables.scss';
-nav {
+
+:host {
+  grid-area: nav;
   @include ui-border;
-  box-sizing: content-box;
+  // Appearance
+  border-width: 0;
+  border-bottom-width: .125rem;
+  padding: 0.5rem;
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+}
 
-  h1 {
-    margin: 0rem;
-  }
+header {
+  display: flex;
+  align-items: center;
+}
 
-  img {
-    height: 1.5rem;
-    margin-right: 0.5rem;
-  }
+h1 {
+  font-size: 1.3rem;
+  margin: 0rem;
+}
 
-  .spacer {
-    height: 100%;
-    flex-grow: 1;
-  }
+img {
+  height: 1.5rem;
+  margin-right: 0.5rem;
 }
