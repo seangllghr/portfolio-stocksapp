@@ -177,7 +177,7 @@ export class MarketSyncService {
         cast: (value, context) => {
           if (context.header) return value;
           if (context.column === 'timestamp') {
-            return Date.parse(value);
+            return value;
           } else {
             return Number.parseFloat(value);
           }
