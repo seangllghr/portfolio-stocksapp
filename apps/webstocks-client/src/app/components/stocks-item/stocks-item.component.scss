@@ -1,0 +1,15 @@
+@import '~/src/variables.scss';
+
+:host {
+  @include stock-list-border;
+  @include border-top;
+  padding: .5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.4rem;
+
+  &:last-of-type {
+    @include border-bottom;
+  }
+
+}

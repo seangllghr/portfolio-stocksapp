@@ -8,9 +8,11 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import { faPlus, faHome } from '@fortawesome/free-solid-svg-icons';
 import { ListPanelComponent } from './components/layout/list-panel/list-panel.component';
 import { MainPanelComponent } from './components/layout/main-panel/main-panel.component';
+import { StocksComponent } from './components/stocks/stocks.component';
+import { StocksItemComponent } from './components/stocks-item/stocks-item.component';
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, ListPanelComponent, MainPanelComponent],
+  declarations: [AppComponent, NavbarComponent, ListPanelComponent, MainPanelComponent, StocksComponent, StocksItemComponent],
   imports: [
     BrowserModule,
     RouterModule.forRoot([], { initialNavigation: 'enabledBlocking' }),
