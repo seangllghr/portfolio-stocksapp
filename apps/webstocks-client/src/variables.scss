@@ -43,12 +43,31 @@ $palette-aqua-b:   #8ec07c;
 $palette-orange:   #d65d0e;
 $palette-orange-b: #fe8019;
 
-@mixin ui-border {
-  border-color: $palette-fg3;
-  border-style: solid;
-}
-
 @mixin ui-dark {
   background: $palette-bg;
   color: $palette-fg;
+}
+
+@mixin ui-border {
+  border: 0 solid $palette-fg3;
+}
+
+@mixin stock-list-border {
+  border: 0 solid $palette-bg2;
+}
+
+@mixin border-top {
+  border-top-width: .125rem;
+}
+
+@mixin border-bottom {
+  border-bottom-width: .125rem;
+}
+
+@mixin border-right {
+  border-right-width: .125rem;
+}
+
+@mixin border-left {
+  border-left-width: .125rem;
 }

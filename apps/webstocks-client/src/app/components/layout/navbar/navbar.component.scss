@@ -2,10 +2,9 @@
 
 :host {
   grid-area: nav;
-  @include ui-border;
   // Appearance
-  border-width: 0;
-  border-bottom-width: .125rem;
+  @include ui-border;
+  @include border-bottom;
   padding: 0.5rem;
   display: flex;
   align-items: center;
