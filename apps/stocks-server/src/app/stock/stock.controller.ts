@@ -12,6 +12,12 @@ export class StockController {
     return result;
   }
 
+  @Get()
+  async getAll() {
+    const result = await this.stockService.findAll();
+    return result;
+  }
+
   @Get(':symbol')
   async findBySymbol(@Param('symbol') symbol: string) {
     const result = await this.stockService.findBySymbol(symbol);

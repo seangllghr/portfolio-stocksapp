@@ -27,6 +27,10 @@ export class StockService {
     }
   }
 
+  async findAll() {
+    return await this.stockModel.find({});
+  }
+
   async update(symbol: string, updateObject: unknown) {
     const result = await this.stockModel.updateOne(
       { Symbol: symbol },
