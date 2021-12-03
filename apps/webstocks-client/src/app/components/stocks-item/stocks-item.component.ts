@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
+import { StockInterface as Stock } from '@portfolio-stocksapp/shared-data-model';
 
 @Component({
   selector: 'webstocks-stocks-item',
@@ -7,10 +7,8 @@ import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
   styleUrls: ['./stocks-item.component.scss']
 })
 export class StocksItemComponent implements OnInit {
-  @Input() stock!: StockInterface;
+  @Input() stock!: Stock;
   lastPrice?: number;
-
-  constructor() { }
 
   ngOnInit(): void {
     this.lastPrice = (this.stock.priceHistory)
