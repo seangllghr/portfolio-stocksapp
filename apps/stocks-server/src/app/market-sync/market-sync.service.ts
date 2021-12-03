@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cron, Timeout } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry, Timeout } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import * as csv from 'csv/sync';
 import { firstValueFrom } from 'rxjs';
@@ -18,11 +18,15 @@ interface UpdateObject {
   symbol: string;
 }
 
+const updateJobName = 'updateJob';
+const repopulateJobName = 'repopulateJob';
+
 @Injectable()
 export class MarketSyncService {
   constructor(
     @InjectModel(Stock.name) private stockModel: Model<Stock>,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private schedulerRegistry: SchedulerRegistry
   ) {}
 
   private updateQueue: UpdateObject[] = [];
@@ -34,9 +38,27 @@ export class MarketSyncService {
    * 5 API calls per minute at its free tier. Thus, our update service is built
    * around this limitation. For a production system, this could be relaxed.
    */
-  @Cron('*/12 * * * * *')
+  @Cron('*/12 * * * * *', {
+    name: updateJobName
+  })
   runUpdateTask(): void {
     this.runNextUpdate();
+  }
+
+  /**
+   * Declare a cron job to repopulate the update queue once per day
+   *
+   * NOTE: In addition to the 5/minute rate limit, we also have a limit of 500
+   * calls per day. Since we're only using daily time series data, it doesn't
+   * really make sense to update more often than this, anyway.
+   */
+  @Cron('0 20 * * *', {
+    name: repopulateJobName
+  })
+  async repopulateUpdateQueue() {
+    Logger.log('Repopulating the update queue');
+    const numUpdates = await this.populateUpdateQueue();
+    Logger.log(`Queued ${numUpdates} updates`);
   }
 
   /**
@@ -53,6 +75,8 @@ export class MarketSyncService {
    * Populate update queue with update objects, to be processed by runNextUpdate
    */
   async populateUpdateQueue(): Promise<number> {
+    // Stop the update job so we don't update before the list is filled
+    this.schedulerRegistry.getCronJob(updateJobName).stop();
     if (this.updateQueue.length > 0) return 0; // return if queue not empty
     let numUpdates = 0;
 
@@ -76,6 +100,7 @@ export class MarketSyncService {
       Logger.debug(`Queued time series update for ${symbol}`);
       numUpdates++;
     }
+    this.schedulerRegistry.getCronJob(updateJobName).start();
     return numUpdates;
   }
 
@@ -84,7 +109,12 @@ export class MarketSyncService {
    */
   async runNextUpdate(): Promise<void> {
     if (this.updateQueue.length == 0) {
-      this.populateUpdateQueue();
+      const nextUpdate = this.schedulerRegistry
+        .getCronJob(repopulateJobName)
+        .nextDate()
+        .toISOString()
+      Logger.log(`Update complete. Next update at ${nextUpdate}`)
+      this.schedulerRegistry.getCronJob(updateJobName).stop();
       return;
     }
     const updateSpec = this.updateQueue.shift();
