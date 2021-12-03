@@ -27,7 +27,7 @@ export class StockService {
     }
   }
 
-  async update(symbol: string, updateObject: Object) {
+  async update(symbol: string, updateObject: unknown) {
     const result = await this.stockModel.updateOne(
       { Symbol: symbol },
       updateObject
