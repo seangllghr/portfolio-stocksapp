@@ -12,15 +12,17 @@ export class StocksComponent implements OnInit {
   stocks: Stock[] = [];
   selectedStock: Stock = new Stock();
 
-  constructor(private stockService: StockService,
-              private uiService: UiService) { }
+  constructor(
+    private stockService: StockService,
+    private uiService: UiService,
+  ) {}
 
   ngOnInit(): void {
     this.stockService.getStocks().subscribe((stocks) => this.stocks = stocks);
   }
 
   onSelectStock(stock: Stock) {
-    this.uiService.setStockSelection(stock);
+    this.uiService.setStockSelection(stock.Symbol);
   }
 
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
+import { StockService } from './stock.service';
 
 export interface StockDetailState {
   selectedStock: Stock,
@@ -15,11 +16,25 @@ export class UiService {
     selectedStock: new Stock(),
     showStockDetail: false
   }
+  private stocks: Stock[] = [];
   private subject = new Subject<StockDetailState>();
 
-  setStockSelection(stock: Stock): void {
-    this.stockDetailState.selectedStock = stock;
-    this.stockDetailState.showStockDetail = true;
+  constructor(private stockService: StockService) {
+    this.stockService.getStocks().subscribe(stocks => {
+      this.stocks = stocks;
+    })
+  }
+
+  getStocks(): Stock[] {
+    return this.stocks;
+  }
+
+  setStockSelection(symbol: string): void {
+    // If the Symbol matches an existing stock (it should), pick that one
+    this.stockDetailState.selectedStock =
+      this.stocks.find((stock) => stock.Symbol === symbol)
+      || new Stock();
+    this.stockDetailState.showStockDetail = (symbol !== '');
     this.subject.next(this.stockDetailState);
   }
 
