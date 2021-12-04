@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { StockInterface as Stock } from '@portfolio-stocksapp/shared-data-model';
+import { Stock } from '@portfolio-stocksapp/shared-data-model';
 
 @Component({
   selector: 'webstocks-stocks-item',

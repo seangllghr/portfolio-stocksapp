@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StockInterface as Stock } from '@portfolio-stocksapp/shared-data-model';
+import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { Observable } from 'rxjs';
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
 import { StockService } from '../../services/stock.service';
+import { Stock } from '@portfolio-stocksapp/shared-data-model';
 
 @Component({
   selector: 'webstocks-stocks',
@@ -8,7 +8,7 @@ import { StockService } from '../../services/stock.service';
   styleUrls: ['./stocks.component.scss']
 })
 export class StocksComponent implements OnInit {
-  stocks: StockInterface[] = [];
+  stocks: Stock[] = [];
 
   constructor(private stockService: StockService) { }
 
