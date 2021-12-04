@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { StockDetailState, UiService } from '../../../services/ui-service.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'webstocks-main-panel',
@@ -13,10 +12,9 @@ export class MainPanelComponent {
     selectedStock: new Stock(),
     showStockDetail: false
   };
-  private subscription: Subscription;
 
   constructor(private uiService: UiService) {
-    this.subscription = this.uiService.onSelectStock()
+    this.uiService.onSelectStock()
       .subscribe((state: StockDetailState) => this.stockDetailState = state)
   }
 
