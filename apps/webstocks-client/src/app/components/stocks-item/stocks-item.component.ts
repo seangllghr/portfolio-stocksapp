@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StockInterface as Stock } from '@portfolio-stocksapp/shared-data-model';
 
 @Component({
@@ -8,12 +8,17 @@ import { StockInterface as Stock } from '@portfolio-stocksapp/shared-data-model'
 })
 export class StocksItemComponent implements OnInit {
   @Input() stock!: Stock;
+  @Output() selectStockEvent: EventEmitter<Stock> = new EventEmitter();
   lastPrice?: number;
 
   ngOnInit(): void {
     this.lastPrice = (this.stock.priceHistory)
       ? this.stock.priceHistory[0].close
       : -1;
+  }
+
+  onSelect() {
+    this.selectStockEvent.emit(this.stock);
   }
 
 }
