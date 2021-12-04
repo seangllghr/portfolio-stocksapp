@@ -1,0 +1,26 @@
+<h2>{{ stock.Symbol }}</h2>
+
+<dl>
+  <li>
+    <dt>Name</dt>
+    <dd>{{ stock.Name }}</dd>
+  </li>
+  <li>
+    <dt>Industry</dt>
+    <dd>{{ stock.Industry }}</dd>
+  </li>
+  <li>
+    <dt>EPS</dt>
+    <dd>{{ stock.EPS }}</dd>
+  </li>
+  <li>
+    <dt>Shares Outstanding</dt>
+    <dd>{{ stock.SharesOutstanding }}</dd>
+  </li>
+  <li>
+    <dt>Last Close</dt>
+    <dd>{{ (stock.priceHistory && stock.priceHistory.length > 0)
+             ? stock.priceHistory![0].close
+             : 'No price listed' }}</dd>
+  </li>
+</dl>

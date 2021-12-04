@@ -11,14 +11,23 @@ import { ListPanelComponent } from './components/layout/list-panel/list-panel.co
 import { MainPanelComponent } from './components/layout/main-panel/main-panel.component';
 import { StocksComponent } from './components/stocks/stocks.component';
 import { StocksItemComponent } from './components/stocks-item/stocks-item.component';
+import { StockDetailComponent } from './components/stock-detail/stock-detail.component';
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, ListPanelComponent, MainPanelComponent, StocksComponent, StocksItemComponent],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    ListPanelComponent,
+    MainPanelComponent,
+    StocksComponent,
+    StocksItemComponent,
+    StockDetailComponent,
+  ],
   imports: [
     BrowserModule,
     RouterModule.forRoot([], { initialNavigation: 'enabledBlocking' }),
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

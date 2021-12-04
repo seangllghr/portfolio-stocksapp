@@ -1,1 +1,7 @@
-<h2>Welcome to <span style="font-size:3rem; display: block;">WebSTOCKS</span></h2>
+<h2 *ngIf="!stockDetailState.showStockDetail">
+  Welcome to <span style="font-size:3rem; display: block;">WebSTOCKS</span>
+</h2>
+<webstocks-stock-detail
+  *ngIf="stockDetailState.showStockDetail"
+  [stock] = 'stockDetailState.selectedStock'
+></webstocks-stock-detail>
