@@ -3,8 +3,9 @@
   <header>
     <fa-icon [icon]="['fas','times']" (click)="closeStockDetail()"></fa-icon>
     <h2>{{ stock.Symbol }}</h2>
+    <fa-icon [icon]="['fas','angle-down']" (click)="toggleCollapseDetail()"></fa-icon>
   </header>
-  <dl>
+  <dl [ngClass]="{'collapse': collapse}">
     <li>
       <dt class='name'>Name</dt>
       <dd class='name'>{{ stock.Name }}</dd>
@@ -25,6 +26,11 @@
       <dt class='price'>Last Close</dt>
       <dd class='price' [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}">
         {{ lastClose.price }}
+        (
+        {{ (lastClose.delta) }}%
+        <fa-icon *ngIf="lastClose.trend" [icon]="['fas', 'angle-up']"></fa-icon>
+        <fa-icon *ngIf="!lastClose.trend" [icon]="['fas', 'angle-down']"></fa-icon>
+        )
       </dd>
     </li>
   </dl>

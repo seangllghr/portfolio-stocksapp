@@ -13,11 +13,24 @@ header {
   h2 {
     margin: 0 .5rem;
   }
+
+  fa-icon {
+    &:hover {
+      color: $palette-fg0;
+    }
+    &:active {
+      color: $palette-fg2;
+    }
+  }
 }
 
 dl {
   list-style: none;
-  width: 40%;
+  max-width: 20rem;
+
+  &.collapse {
+    display: none;
+  }
 
   dt {
     font-weight: bold;

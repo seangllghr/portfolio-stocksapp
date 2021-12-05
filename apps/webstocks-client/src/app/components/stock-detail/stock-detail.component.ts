@@ -11,7 +11,8 @@ import { UiService } from '../../services/ui-service.service';
 export class StockDetailComponent implements OnInit {
   showStockDetail = false;
   stock = new Stock();
-  lastClose = { price: 0, trend: true }
+  collapse = false;
+  lastClose = { price: 0, trend: true, delta: '0' }
 
   constructor(
     private route: ActivatedRoute,
@@ -35,14 +36,23 @@ export class StockDetailComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  setLastClose(): {price: number, trend: boolean} {
+  toggleCollapseDetail() {
+    this.collapse = !this.collapse;
+  }
+
+  setLastClose(): {price: number, trend: boolean, delta: string} {
     const price =
       (this.stock.priceHistory.length > 0) ? this.stock.priceHistory[0].close : 0;
     let trend = true;
+    let delta = '';
     if (this.stock.priceHistory.length > 1) {
-      trend = !(this.stock.priceHistory[0].close - this.stock.priceHistory[1].close < 0)
+      // calculate daily percent change: ((P_old-P_new)/P_old)*100
+      let deltaResult = (this.stock.priceHistory[0].close - this.stock.priceHistory[1].close)
+      deltaResult = deltaResult/ this.stock.priceHistory[1].close * 100;
+      trend = !(deltaResult < 0);
+      delta = deltaResult.toFixed(2);
     }
-    return { price, trend }
+    return { price, trend, delta }
   }
 
 }
