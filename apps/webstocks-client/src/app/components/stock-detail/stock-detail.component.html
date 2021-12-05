@@ -1,26 +1,35 @@
-<h2>{{ stock.Symbol }}</h2>
+<article *ngIf="stockDetailState.showStockDetail">
 
-<dl>
-  <li>
-    <dt>Name</dt>
-    <dd>{{ stock.Name }}</dd>
-  </li>
-  <li>
-    <dt>Industry</dt>
-    <dd>{{ stock.Industry }}</dd>
-  </li>
-  <li>
-    <dt>EPS</dt>
-    <dd>{{ stock.EPS }}</dd>
-  </li>
-  <li>
-    <dt>Shares Outstanding</dt>
-    <dd>{{ stock.SharesOutstanding }}</dd>
-  </li>
-  <li>
-    <dt>Last Close</dt>
-    <dd>{{ (stock.priceHistory && stock.priceHistory.length > 0)
-             ? stock.priceHistory![0].close
-             : 'No price listed' }}</dd>
-  </li>
-</dl>
+  <header>
+    <fa-icon [icon]="['fas','times']" (click)="closeStockDetail()"></fa-icon>
+    <h2>{{ stockDetailState.selectedStock.Symbol }}</h2>
+  </header>
+  <dl>
+    <li>
+      <dt>Name</dt>
+      <dd>{{ stockDetailState.selectedStock.Name }}</dd>
+    </li>
+    <li>
+      <dt>Industry</dt>
+      <dd>{{ stockDetailState.selectedStock.Industry }}</dd>
+    </li>
+    <li>
+      <dt>EPS</dt>
+      <dd>{{ stockDetailState.selectedStock.EPS }}</dd>
+    </li>
+    <li>
+      <dt>Shares Outstanding</dt>
+      <dd>{{ stockDetailState.selectedStock.SharesOutstanding }}</dd>
+    </li>
+    <li>
+      <dt>Last Close</dt>
+      <dd>{{(
+            stockDetailState.selectedStock.priceHistory
+            && stockDetailState.selectedStock.priceHistory.length > 0
+            )
+            ? stockDetailState.selectedStock.priceHistory![0].close
+            : 'No price listed'
+          }}</dd>
+    </li>
+  </dl>
+</article>

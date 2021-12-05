@@ -1,0 +1,14 @@
+:host {
+  height: 100%;
+  width: 100%;
+  padding: .5rem;
+}
+
+header {
+  display: flex;
+  align-items: center;
+
+  h2 {
+    margin: 0 .5rem;
+  }
+}

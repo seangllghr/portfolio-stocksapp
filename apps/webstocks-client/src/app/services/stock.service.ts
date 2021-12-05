@@ -11,6 +11,10 @@ export class StockService {
 
   constructor(private http: HttpClient) {}
 
+  getStock(symbol: string): Observable<Stock> {
+    return this.http.get<Stock>(`${this.apiUrl}${symbol}`);
+  }
+
   getStocks(): Observable<Stock[]> {
     return this.http.get<Stock[]>(this.apiUrl);
   }

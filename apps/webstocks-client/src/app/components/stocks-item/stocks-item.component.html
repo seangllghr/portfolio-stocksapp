@@ -1,4 +1,4 @@
-<button (click)="onSelect()">
+<button (click)="onSelect()" [routerLink]="['/stock', stock.Symbol]">
   <span class="symbol">{{ stock.Symbol }}</span>
   <span class="lastPrice">{{ lastPrice }}</span>
 </button>

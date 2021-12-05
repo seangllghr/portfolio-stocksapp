@@ -6,12 +6,36 @@ import { HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
-import { faPlus, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faHome, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ListPanelComponent } from './components/layout/list-panel/list-panel.component';
 import { MainPanelComponent } from './components/layout/main-panel/main-panel.component';
 import { StocksComponent } from './components/stocks/stocks.component';
 import { StocksItemComponent } from './components/stocks-item/stocks-item.component';
 import { StockDetailComponent } from './components/stock-detail/stock-detail.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+
+const routes = [
+  {
+    path: '',
+    component: WelcomeComponent,
+  },
+  {
+    path: 'stock',
+    children: [
+      { path: ':Symbol', component: StockDetailComponent },
+      { path: '', redirectTo: '/', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: '404',
+    component: NotFoundComponent
+  },
+  {
+    path: '**',
+    redirectTo: '/404',
+  }
+]
 
 @NgModule({
   declarations: [
@@ -22,10 +46,12 @@ import { StockDetailComponent } from './components/stock-detail/stock-detail.com
     StocksComponent,
     StocksItemComponent,
     StockDetailComponent,
+    WelcomeComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([], { initialNavigation: 'enabledBlocking' }),
+    RouterModule.forRoot(routes, { initialNavigation: 'enabledBlocking' }),
     HttpClientModule,
     FontAwesomeModule,
   ],
@@ -34,6 +60,6 @@ import { StockDetailComponent } from './components/stock-detail/stock-detail.com
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlus, faHome);
+    library.addIcons(faPlus, faTimes, faHome);
   }
 }
