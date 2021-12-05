@@ -1,35 +1,31 @@
-<article *ngIf="stockDetailState.showStockDetail">
+<article *ngIf="showStockDetail">
 
   <header>
     <fa-icon [icon]="['fas','times']" (click)="closeStockDetail()"></fa-icon>
-    <h2>{{ stockDetailState.selectedStock.Symbol }}</h2>
+    <h2>{{ stock.Symbol }}</h2>
   </header>
   <dl>
     <li>
-      <dt>Name</dt>
-      <dd>{{ stockDetailState.selectedStock.Name }}</dd>
+      <dt class='name'>Name</dt>
+      <dd class='name'>{{ stock.Name }}</dd>
     </li>
     <li>
-      <dt>Industry</dt>
-      <dd>{{ stockDetailState.selectedStock.Industry }}</dd>
+      <dt class='industry'>Industry</dt>
+      <dd class='industry'>{{ stock.Industry.toLowerCase() }}</dd>
     </li>
     <li>
-      <dt>EPS</dt>
-      <dd>{{ stockDetailState.selectedStock.EPS }}</dd>
+      <dt class='eps'>EPS</dt>
+      <dd class='eps'>{{ stock.EPS }}</dd>
     </li>
     <li>
-      <dt>Shares Outstanding</dt>
-      <dd>{{ stockDetailState.selectedStock.SharesOutstanding }}</dd>
+      <dt class='shares-out'>Shares Outstanding</dt>
+      <dd class='shares-out'>{{ stock.SharesOutstanding }}</dd>
     </li>
     <li>
-      <dt>Last Close</dt>
-      <dd>{{(
-            stockDetailState.selectedStock.priceHistory
-            && stockDetailState.selectedStock.priceHistory.length > 0
-            )
-            ? stockDetailState.selectedStock.priceHistory![0].close
-            : 'No price listed'
-          }}</dd>
+      <dt class='price'>Last Close</dt>
+      <dd class='price' [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}">
+        {{ lastClose.price }}
+      </dd>
     </li>
   </dl>
 </article>
