@@ -16,4 +16,16 @@ export class MenuComponent {
       .onSelectStock()
       .subscribe((state) => (this.showDelete = state.showStockDetail));
   }
+
+  addButtonClick(): void {
+    console.log('Add');
+  }
+
+  deleteButtonClick(): void {
+    console.log('Delete');
+  }
+
+  refreshButtonClick(): void {
+    console.log('Refresh');
+  }
 }

@@ -59,4 +59,8 @@ export class UiService {
   onSelectStock(): Observable<StockDetailState> {
     return this.subject.asObservable();
   }
+
+  refreshStockList(): void {
+    console.log('Refresh stock list');
+  }
 }

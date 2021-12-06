@@ -1,13 +1,16 @@
 <webstocks-menu-button
   [icon]="'plus'"
   [text]="'Add Stock'"
+  (click)="addButtonClick()"
 ></webstocks-menu-button>
 <webstocks-menu-button
+  *ngIf="showDelete"
   [icon]="'minus'"
   [text]="'Delete Stock'"
-  *ngIf="showDelete"
+  (click)="deleteButtonClick()"
 ></webstocks-menu-button>
 <webstocks-menu-button
   [icon]="'redo'"
   [text]="'Reload Stock List'"
+  (click)="refreshButtonClick()"
 ></webstocks-menu-button>
