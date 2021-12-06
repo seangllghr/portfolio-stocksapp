@@ -23,7 +23,6 @@ export class UiService {
     selectedStock: new Stock(),
     showStockDetail: false
   }
-  private stocks: Stock[] = [];
   private subject = new Subject<StockDetailState>();
   private appMainTitle = 'WebSTOCKS';
 
@@ -32,13 +31,6 @@ export class UiService {
     private router: Router,
     private title: Title
   ) {
-    this.stockService.getStocks().subscribe(stocks => {
-      this.stocks = stocks;
-    })
-  }
-
-  getStocks(): Stock[] {
-    return this.stocks;
   }
 
   async setStockSelection(symbol: string): Promise<void> {
