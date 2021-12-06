@@ -24,7 +24,7 @@ export class UiService {
     showStockDetail: false
   }
   private subject = new Subject<StockDetailState>();
-  private appMainTitle = 'WebSTOCKS';
+  appMainTitle = 'WebSTOCKS';
 
   constructor(
     private stockService: StockService,
@@ -54,6 +54,7 @@ export class UiService {
     }
     this.router.navigate(['/'])
     this.title.setTitle(this.appMainTitle)
+    this.subject.next(this.stockDetailState)
   }
 
   onSelectStock(): Observable<StockDetailState> {

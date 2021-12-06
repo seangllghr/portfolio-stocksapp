@@ -5,10 +5,9 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import { HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/layout/navbar/navbar.component';
-import { faPlus, faHome, faTimes, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-import { ListPanelComponent } from './components/layout/list-panel/list-panel.component';
-import { MainPanelComponent } from './components/layout/main-panel/main-panel.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { MenuButtonComponent } from './components/menu-button/menu-button.component'
+import { faPlus, faTimes, faAngleDown, faAngleUp, faMinus, faRedo } from '@fortawesome/free-solid-svg-icons';
 import { StocksComponent } from './components/stocks/stocks.component';
 import { StocksItemComponent } from './components/stocks-item/stocks-item.component';
 import { StockDetailComponent } from './components/stock-detail/stock-detail.component';
@@ -40,9 +39,8 @@ const routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
-    ListPanelComponent,
-    MainPanelComponent,
+    MenuComponent,
+    MenuButtonComponent,
     StocksComponent,
     StocksItemComponent,
     StockDetailComponent,
@@ -60,6 +58,6 @@ const routes = [
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlus, faTimes, faHome, faAngleUp, faAngleDown);
+    library.addIcons(faPlus, faTimes, faMinus, faRedo, faAngleUp, faAngleDown);
   }
 }

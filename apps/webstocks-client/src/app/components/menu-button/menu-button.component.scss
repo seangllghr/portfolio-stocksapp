@@ -1,0 +1,24 @@
+@import '~/src/variables.scss';
+
+:host {
+  @include ui-border;
+  @include border-left;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+
+  &:hover {
+    background: $palette-bg3;
+  }
+  &:active {
+    background: $palette-fg4;
+    color: $palette-bg1;
+  }
+
+  span {
+    font-size: 1.2rem;
+    margin-left: .5rem;
+    font-variant: small-caps;
+  }
+}

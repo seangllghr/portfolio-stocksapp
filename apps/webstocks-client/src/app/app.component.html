@@ -1,3 +1,12 @@
-<webstocks-navbar></webstocks-navbar>
-<webstocks-list-panel></webstocks-list-panel>
-<webstocks-main-panel></webstocks-main-panel>
+<header>
+  <img src="assets/favicon.svg" alt="WebStocks Logo" />
+  <h1>{{ title }}</h1>
+  <div class="spacer"></div>
+  <webstocks-menu></webstocks-menu>
+</header>
+<nav>
+  <webstocks-stocks></webstocks-stocks>
+</nav>
+<main>
+  <router-outlet></router-outlet>
+</main>
