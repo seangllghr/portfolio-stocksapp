@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
@@ -24,10 +25,12 @@ export class UiService {
   }
   private stocks: Stock[] = [];
   private subject = new Subject<StockDetailState>();
+  private appMainTitle = 'WebSTOCKS';
 
   constructor(
     private stockService: StockService,
     private router: Router,
+    private title: Title
   ) {
     this.stockService.getStocks().subscribe(stocks => {
       this.stocks = stocks;
@@ -44,6 +47,7 @@ export class UiService {
     try {
       newStock = await firstValueFrom(this.stockService.getStock(symbol));
       this.router.navigate(['stock', `${symbol}`])
+      this.title.setTitle(`${this.appMainTitle} — ${symbol}`)
     } catch (err) {
       this.router.navigate(['404']);
     }
@@ -57,6 +61,7 @@ export class UiService {
       showStockDetail: false
     }
     this.router.navigate(['/'])
+    this.title.setTitle(this.appMainTitle)
   }
 
   onSelectStock(): Observable<StockDetailState> {
