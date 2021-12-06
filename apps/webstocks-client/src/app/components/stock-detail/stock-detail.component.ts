@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { UiService } from '../../services/ui-service.service';
 
@@ -16,7 +16,6 @@ export class StockDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private uiService: UiService
   ) {
     this.route.paramMap.subscribe(params => {
@@ -33,7 +32,7 @@ export class StockDetailComponent implements OnInit {
   }
 
   closeStockDetail() {
-    this.router.navigate(['/']);
+    this.uiService.unsetStockSelection();
   }
 
   toggleCollapseDetail() {

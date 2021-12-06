@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { firstValueFrom, Observable, of, Subject } from 'rxjs';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { StockService } from './stock.service';
 
 export class StockDetailState {
@@ -27,7 +27,7 @@ export class UiService {
 
   constructor(
     private stockService: StockService,
-    private router: Router
+    private router: Router,
   ) {
     this.stockService.getStocks().subscribe(stocks => {
       this.stocks = stocks;
@@ -43,11 +43,20 @@ export class UiService {
     let newStock = new Stock();
     try {
       newStock = await firstValueFrom(this.stockService.getStock(symbol));
+      this.router.navigate(['stock', `${symbol}`])
     } catch (err) {
       this.router.navigate(['404']);
     }
     this.stockDetailState = new StockDetailState(newStock);
     this.subject.next(this.stockDetailState);
+  }
+
+  unsetStockSelection(): void {
+    this.stockDetailState = {
+      selectedStock: new Stock(),
+      showStockDetail: false
+    }
+    this.router.navigate(['/'])
   }
 
   onSelectStock(): Observable<StockDetailState> {
