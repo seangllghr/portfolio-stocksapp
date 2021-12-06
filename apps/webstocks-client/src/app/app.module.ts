@@ -1,13 +1,23 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { HttpClientModule } from '@angular/common/http'
+import {
+  FontAwesomeModule,
+  FaIconLibrary,
+} from '@fortawesome/angular-fontawesome';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
-import { MenuButtonComponent } from './components/menu-button/menu-button.component'
-import { faPlus, faTimes, faAngleDown, faAngleUp, faMinus, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { MenuButtonComponent } from './components/menu-button/menu-button.component';
+import {
+  faPlus,
+  faTimes,
+  faAngleDown,
+  faAngleUp,
+  faMinus,
+  faRedo,
+} from '@fortawesome/free-solid-svg-icons';
 import { StocksComponent } from './components/stocks/stocks.component';
 import { StocksItemComponent } from './components/stocks-item/stocks-item.component';
 import { StockDetailComponent } from './components/stock-detail/stock-detail.component';
@@ -23,18 +33,18 @@ const routes = [
     path: 'stock',
     children: [
       { path: ':Symbol', component: StockDetailComponent },
-      { path: '', redirectTo: '/', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: '/', pathMatch: 'full' },
+    ],
   },
   {
     path: '404',
-    component: NotFoundComponent
+    component: NotFoundComponent,
   },
   {
     path: '**',
     redirectTo: '/404',
-  }
-]
+  },
+];
 
 @NgModule({
   declarations: [

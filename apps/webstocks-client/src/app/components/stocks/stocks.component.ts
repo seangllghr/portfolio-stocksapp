@@ -6,7 +6,7 @@ import { UiService } from '../../services/ui-service.service';
 @Component({
   selector: 'webstocks-stocks',
   templateUrl: './stocks.component.html',
-  styleUrls: ['./stocks.component.scss']
+  styleUrls: ['./stocks.component.scss'],
 })
 export class StocksComponent implements OnInit {
   stocks: Stock[] = [];
@@ -14,15 +14,14 @@ export class StocksComponent implements OnInit {
 
   constructor(
     private stockService: StockService,
-    private uiService: UiService,
+    private uiService: UiService
   ) {}
 
   ngOnInit(): void {
-    this.stockService.getStocks().subscribe((stocks) => this.stocks = stocks);
+    this.stockService.getStocks().subscribe((stocks) => (this.stocks = stocks));
   }
 
   onSelectStock(stock: Stock) {
     this.uiService.setStockSelection(stock.Symbol);
   }
-
 }

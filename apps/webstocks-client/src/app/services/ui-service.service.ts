@@ -11,18 +11,18 @@ export class StockDetailState {
 
   constructor(stock?: Stock) {
     this.selectedStock = stock || new Stock();
-    this.showStockDetail = (stock) ? true : false;
+    this.showStockDetail = stock ? true : false;
   }
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UiService {
   private stockDetailState: StockDetailState = {
     selectedStock: new Stock(),
-    showStockDetail: false
-  }
+    showStockDetail: false,
+  };
   private subject = new Subject<StockDetailState>();
   appMainTitle = 'WebSTOCKS';
 
@@ -30,16 +30,15 @@ export class UiService {
     private stockService: StockService,
     private router: Router,
     private title: Title
-  ) {
-  }
+  ) {}
 
   async setStockSelection(symbol: string): Promise<void> {
     // If the Symbol matches an existing stock (it should), pick that one
     let newStock = new Stock();
     try {
       newStock = await firstValueFrom(this.stockService.getStock(symbol));
-      this.router.navigate(['stock', `${symbol}`])
-      this.title.setTitle(`${this.appMainTitle} — ${symbol}`)
+      this.router.navigate(['stock', `${symbol}`]);
+      this.title.setTitle(`${this.appMainTitle} — ${symbol}`);
     } catch (err) {
       this.router.navigate(['404']);
     }
@@ -50,15 +49,14 @@ export class UiService {
   unsetStockSelection(): void {
     this.stockDetailState = {
       selectedStock: new Stock(),
-      showStockDetail: false
-    }
-    this.router.navigate(['/'])
-    this.title.setTitle(this.appMainTitle)
-    this.subject.next(this.stockDetailState)
+      showStockDetail: false,
+    };
+    this.router.navigate(['/']);
+    this.title.setTitle(this.appMainTitle);
+    this.subject.next(this.stockDetailState);
   }
 
   onSelectStock(): Observable<StockDetailState> {
     return this.subject.asObservable();
   }
-
 }

@@ -4,7 +4,7 @@ import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StockService {
   private apiUrl = 'http://localhost:3333/api/stock/';
