@@ -1,0 +1,14 @@
+@import '~/src/variables.scss';
+:host {
+  text-align: center;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+a {
+  color: $palette-purple;
+  font-size: 1.6rem;
+  text-decoration: none;
+}
