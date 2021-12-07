@@ -1,6 +1,11 @@
 @import '~/src/variables.scss';
 
 :host {
+  align-self: stretch;
+}
+
+button {
+  @include ui-dark;
   @include ui-border;
   @include border-left;
   height: 100%;
