@@ -16,8 +16,4 @@ export class AppComponent {
       .onSelectStock()
       .subscribe((state) => (this.showStockChart = state.showStockDetail));
   }
-
-  refreshStockList() {
-    this.uiService.refreshStockList();
-  }
 }

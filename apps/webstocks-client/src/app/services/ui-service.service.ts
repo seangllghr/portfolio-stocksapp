@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
+import { MenuAction } from '../components/menu/menu.component';
 import { StockService } from './stock.service';
 
 export class StockDetailState {
@@ -23,7 +24,8 @@ export class UiService {
     selectedStock: new Stock(),
     showStockDetail: false,
   };
-  private subject = new Subject<StockDetailState>();
+  private menuAction = new Subject<MenuAction>();
+  private stockSelection = new Subject<StockDetailState>();
   appMainTitle = 'WebSTOCKS';
 
   constructor(
@@ -43,7 +45,7 @@ export class UiService {
       this.router.navigate(['404']);
     }
     this.stockDetailState = new StockDetailState(newStock);
-    this.subject.next(this.stockDetailState);
+    this.stockSelection.next(this.stockDetailState);
   }
 
   unsetStockSelection(): void {
@@ -53,14 +55,26 @@ export class UiService {
     };
     this.router.navigate(['/']);
     this.title.setTitle(this.appMainTitle);
-    this.subject.next(this.stockDetailState);
+    this.stockSelection.next(this.stockDetailState);
   }
 
   onSelectStock(): Observable<StockDetailState> {
-    return this.subject.asObservable();
+    return this.stockSelection.asObservable();
   }
 
-  refreshStockList(): void {
-    console.log('Refresh stock list');
+  setMenuAction(action: MenuAction): void {
+    switch (action) {
+      case MenuAction.ADD:
+        console.log('"Add" menu action')
+        break;
+      case MenuAction.DELETE:
+      case MenuAction.REFRESH:
+        this.menuAction.next(action);
+        break;
+    }
+  }
+
+  onMenuAction(): Observable<MenuAction> {
+    return this.menuAction.asObservable();
   }
 }

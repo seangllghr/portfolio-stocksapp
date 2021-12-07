@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { UiService } from '../../services/ui-service.service';
 
+export enum MenuAction {
+  'ADD',
+  'DELETE',
+  'REFRESH'
+}
+
 @Component({
   selector: 'webstocks-menu',
   templateUrl: './menu.component.html',
@@ -18,14 +24,14 @@ export class MenuComponent {
   }
 
   addButtonClick(): void {
-    console.log('Add');
+    this.uiService.setMenuAction(MenuAction.ADD);
   }
 
   deleteButtonClick(): void {
-    console.log('Delete');
+    this.uiService.setMenuAction(MenuAction.DELETE);
   }
 
   refreshButtonClick(): void {
-    console.log('Refresh');
+    this.uiService.setMenuAction(MenuAction.REFRESH);
   }
 }
