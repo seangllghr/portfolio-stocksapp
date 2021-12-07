@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { StockService } from '../../services/stock.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { UiService } from '../../services/ui-service.service';
@@ -19,18 +19,22 @@ export class StocksComponent {
     private stockService: StockService,
     private uiService: UiService
   ) {
-    this.stockSubscription = this.stockService.getStocks().subscribe((stocks) => (this.stocks = stocks));
+    this.stockSubscription = this.stockService
+      .getStocks()
+      .subscribe((stocks) => (this.stocks = stocks));
     this.uiService.onMenuAction().subscribe((action) => {
       if (action === MenuAction.REFRESH) {
         this.refreshStocks();
       }
-    })
+    });
   }
 
-  refreshStocks():void {
+  refreshStocks(): void {
     this.stockSubscription.unsubscribe();
-    this.stocks = []
-    this.stockSubscription = this.stockService.getStocks().subscribe((stocks) => (this.stocks = stocks));
+    this.stocks = [];
+    this.stockSubscription = this.stockService
+      .getStocks()
+      .subscribe((stocks) => (this.stocks = stocks));
   }
 
   onSelectStock(stock: Stock) {
