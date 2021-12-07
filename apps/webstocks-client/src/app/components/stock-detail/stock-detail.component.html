@@ -1,12 +1,12 @@
 <article *ngIf="showStockDetail">
 
   <header>
-    <button name="close">
-      <fa-icon [icon]="['fas','times']" (click)="closeStockDetail()"></fa-icon>
+    <button aria-label="close" (click)="closeStockDetail()">
+      <fa-icon [icon]="['fas','times']"></fa-icon>
     </button>
     <h2>{{ stock.Symbol }}</h2>
-    <button name="collapse">
-      <fa-icon [icon]="['fas','angle-down']" (click)="toggleCollapseDetail()"></fa-icon>
+    <button aria-label="collapse" (click)="toggleCollapseDetail()">
+      <fa-icon [icon]="['fas','angle-down']"></fa-icon>
     </button>
   </header>
   <dl [ngClass]="{'collapse': collapse}">
