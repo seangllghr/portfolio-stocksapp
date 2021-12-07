@@ -16,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import { AppComponent } from './app.component';
+import { AddStockComponent } from './components/add-stock/add-stock.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MenuButtonComponent } from './components/menu-button/menu-button.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -37,6 +38,10 @@ const routes = [
     ],
   },
   {
+    path: 'add',
+    component: AddStockComponent,
+  },
+  {
     path: '404',
     component: NotFoundComponent,
   },
@@ -49,6 +54,7 @@ const routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    AddStockComponent,
     MenuComponent,
     MenuButtonComponent,
     NotFoundComponent,

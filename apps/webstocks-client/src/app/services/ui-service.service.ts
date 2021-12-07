@@ -65,7 +65,7 @@ export class UiService {
   setMenuAction(action: MenuAction): void {
     switch (action) {
       case MenuAction.ADD:
-        console.log('"Add" menu action')
+        this.router.navigate(['add']);
         break;
       case MenuAction.DELETE:
       case MenuAction.REFRESH:
