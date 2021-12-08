@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { StockService } from '../../services/stock.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { UiService } from '../../services/ui-service.service';
+import { UiService, MenuAction } from '../../services/ui-service.service';
 import { Subscription } from 'rxjs';
-import { MenuAction } from '../menu/menu.component';
 
 @Component({
   selector: 'webstocks-stocks',

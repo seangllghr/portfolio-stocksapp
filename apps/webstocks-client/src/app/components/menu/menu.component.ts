@@ -1,11 +1,5 @@
 import { Component } from '@angular/core';
-import { UiService } from '../../services/ui-service.service';
-
-export enum MenuAction {
-  'ADD',
-  'DELETE',
-  'REFRESH'
-}
+import { UiService, MenuAction } from '../../services/ui-service.service';
 
 @Component({
   selector: 'webstocks-menu',

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
-import { MenuAction } from '../components/menu/menu.component';
 import { StockService } from './stock.service';
 
 export class StockDetailState {
@@ -14,6 +14,13 @@ export class StockDetailState {
     this.selectedStock = stock || new Stock();
     this.showStockDetail = stock ? true : false;
   }
+}
+
+export enum MenuAction {
+  'BACK',
+  'ADD',
+  'DELETE',
+  'REFRESH'
 }
 
 @Injectable({
@@ -30,6 +37,7 @@ export class UiService {
 
   constructor(
     private stockService: StockService,
+    private location: Location,
     private router: Router,
     private title: Title
   ) {}
@@ -64,8 +72,13 @@ export class UiService {
 
   setMenuAction(action: MenuAction): void {
     switch (action) {
+      case MenuAction.BACK:
+        this.location.back();
+        this.title.setTitle(this.appMainTitle);
+        break
       case MenuAction.ADD:
         this.router.navigate(['add']);
+        this.title.setTitle(`${this.appMainTitle} — Add Stock`);
         break;
       case MenuAction.DELETE:
       case MenuAction.REFRESH:
