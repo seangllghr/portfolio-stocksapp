@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UiService } from './services/ui-service.service';
+import { UiService } from './services/ui.service';
 
 @Component({
   selector: 'webstocks-root',

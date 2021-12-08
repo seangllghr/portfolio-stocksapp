@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuAction, UiService } from '../../services/ui-service.service';
+import { MenuAction, UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'webstocks-add-stock',

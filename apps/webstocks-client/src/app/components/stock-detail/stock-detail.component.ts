@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { UiService } from '../../services/ui-service.service';
+import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'webstocks-stock-detail',

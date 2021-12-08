@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { StockService } from '../../services/stock.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { UiService, MenuAction } from '../../services/ui-service.service';
+import { UiService, MenuAction } from '../../services/ui.service';
 import { Subscription } from 'rxjs';
 
 @Component({
