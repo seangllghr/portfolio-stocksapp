@@ -12,3 +12,11 @@ html {
   background-color: $palette-bg;
   color: $palette-fg;
 }
+
+menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}

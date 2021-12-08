@@ -5,10 +5,10 @@
 }
 
 menu {
-  display: flex;
-  align-items: center;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+
+  webstocks-menu-button {
+    @include ui-border;
+    @include border-left;
+  }
 }

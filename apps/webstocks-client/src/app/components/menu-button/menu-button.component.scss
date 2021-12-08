@@ -8,16 +8,18 @@
 button {
   @include ui-dark;
   @include ui-border;
-  @include border-left;
   @include ui-button;
   height: 100%;
   display: flex;
   align-items: center;
   padding: 0.5rem;
 
+  fa-icon {
+    margin-right: .5rem;
+  }
+
   span {
     font-size: 1.2rem;
-    margin-left: .5rem;
     font-variant: small-caps;
   }
 }

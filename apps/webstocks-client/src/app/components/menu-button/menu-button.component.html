@@ -1,4 +1,4 @@
 <button type="button">
-  <fa-icon [icon]="['fas',icon]"></fa-icon>
+  <fa-icon *ngIf="icon" [icon]="['fas',icon]"></fa-icon>
   <span *ngIf="text">{{ text }}</span>
 </button>
