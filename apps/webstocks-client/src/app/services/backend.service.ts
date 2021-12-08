@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class StockService {
+export class BackendService {
   private apiUrl = 'http://localhost:3333/api/stock/';
 
   constructor(private http: HttpClient) {}

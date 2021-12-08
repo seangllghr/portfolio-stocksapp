@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { StockService } from '../../services/stock.service';
+import { BackendService } from '../../services/backend.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { UiService, MenuAction } from '../../services/ui.service';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,7 @@ export class StocksComponent {
   stockSubscription: Subscription;
 
   constructor(
-    private stockService: StockService,
+    private stockService: BackendService,
     private uiService: UiService
   ) {
     this.stockSubscription = this.stockService

@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
-import { StockService } from './stock.service';
+import { BackendService } from './backend.service';
 
 export class StockDetailState {
   selectedStock: Stock;
@@ -36,7 +36,7 @@ export class UiService {
   appMainTitle = 'WebSTOCKS';
 
   constructor(
-    private stockService: StockService,
+    private stockService: BackendService,
     private location: Location,
     private router: Router,
     private title: Title
