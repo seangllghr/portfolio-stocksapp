@@ -1,0 +1,26 @@
+@import '~/src/variables.scss';
+
+:host {
+  @include ui-border;
+  @include border-bottom;
+  display: flex;
+  align-items: center;
+  margin: .5rem;
+  padding: .25rem;
+
+  input {
+    @include ui-border;
+    @include ui-dark;
+    flex-grow: 1;
+    padding: .5rem;
+
+    &::placeholder {
+      color: $palette-fg4;
+    }
+  }
+
+  button {
+    @include ui-border;
+    @include icon-button;
+  }
+}

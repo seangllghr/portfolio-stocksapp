@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import {
   FontAwesomeModule,
   FaIconLibrary,
@@ -11,6 +12,8 @@ import {
   faAngleUp,
   faMinus,
   faRedo,
+  faSearch,
+  faBackspace,
 } from '@fortawesome/free-solid-svg-icons';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -24,6 +27,7 @@ import { StocksComponent } from './components/stocks/stocks.component';
 import { StocksItemComponent } from './components/stocks-item/stocks-item.component';
 import { StockDetailComponent } from './components/stock-detail/stock-detail.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
 
 const routes = [
   {
@@ -62,9 +66,11 @@ const routes = [
     StocksItemComponent,
     StockDetailComponent,
     WelcomeComponent,
+    SearchBarComponent,
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     FontAwesomeModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabledBlocking' }),
@@ -74,6 +80,15 @@ const routes = [
 })
 export class AppModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faPlus, faTimes, faMinus, faRedo, faAngleUp, faAngleDown);
+    library.addIcons(
+      faPlus,
+      faTimes,
+      faMinus,
+      faRedo,
+      faAngleUp,
+      faAngleDown,
+      faSearch,
+      faBackspace
+    );
   }
 }

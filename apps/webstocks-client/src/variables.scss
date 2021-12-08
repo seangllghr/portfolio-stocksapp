@@ -87,6 +87,8 @@ $palette-orange-b: #fe8019;
 }
 
 @mixin icon-button {
+  background: transparent;
+  color: $palette-fg;
     &:hover {
       color: $palette-fg0;
     }
