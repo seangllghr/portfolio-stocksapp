@@ -80,9 +80,12 @@ export class MarketSyncService {
     if (this.updateQueue.length > 0) return 0; // return if queue not empty
     let numUpdates = 0;
 
+    // Get the symbols array
+    const stocks = await this.getStockList();
+
     // Loop through the symbols array, locate each one in the database,
     // and add the appropriate update tasks to the queue.
-    for (const symbol of config.stocks) {
+    for (const symbol of stocks) {
       Logger.debug(`Queueing updates for ${symbol}`);
       const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
       if (!existingRecord) {
