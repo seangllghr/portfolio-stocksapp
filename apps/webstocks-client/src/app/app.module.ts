@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 import {
   FontAwesomeModule,
   FaIconLibrary,
 } from '@fortawesome/angular-fontawesome';
-import { HttpClientModule } from '@angular/common/http';
 import {
   faPlus,
   faTimes,
@@ -14,6 +12,8 @@ import {
   faMinus,
   faRedo,
 } from '@fortawesome/free-solid-svg-icons';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { AddStockComponent } from './components/add-stock/add-stock.component';
@@ -65,9 +65,9 @@ const routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes, { initialNavigation: 'enabledBlocking' }),
-    HttpClientModule,
     FontAwesomeModule,
+    HttpClientModule,
+    RouterModule.forRoot(routes, { initialNavigation: 'enabledBlocking' }),
   ],
   providers: [],
   bootstrap: [AppComponent],
