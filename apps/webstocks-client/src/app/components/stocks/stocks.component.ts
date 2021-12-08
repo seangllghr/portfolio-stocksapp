@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { StockService } from '../../services/stock.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
 import { UiService } from '../../services/ui-service.service';
@@ -11,7 +11,9 @@ import { MenuAction } from '../menu/menu.component';
   styleUrls: ['./stocks.component.scss'],
 })
 export class StocksComponent {
+  @Input() filter = '';
   stocks: Stock[] = [];
+  filteredStocks: Stock[] = [];
   selectedStock: Stock = new Stock();
   stockSubscription: Subscription;
 
@@ -21,7 +23,10 @@ export class StocksComponent {
   ) {
     this.stockSubscription = this.stockService
       .getStocks()
-      .subscribe((stocks) => (this.stocks = stocks));
+      .subscribe((stocks) => {
+        this.stocks = stocks;
+        this.updateFilteredList();
+      });
     this.uiService.onMenuAction().subscribe((action) => {
       if (action === MenuAction.REFRESH) {
         this.refreshStocks();
@@ -35,9 +40,24 @@ export class StocksComponent {
     this.stockSubscription = this.stockService
       .getStocks()
       .subscribe((stocks) => (this.stocks = stocks));
+    this.updateFilteredList();
   }
 
-  onSelectStock(stock: Stock) {
+  onSelectStock(stock: Stock): void {
     this.uiService.setStockSelection(stock.Symbol);
+  }
+
+  onFilterChange(filter: string): void {
+    this.filter = filter.toUpperCase();
+    this.updateFilteredList();
+  }
+
+  updateFilteredList(): void {
+    if (this.filter !== '') {
+      this.filteredStocks =
+        this.stocks.filter((stock) => (stock.Symbol.includes(this.filter)));
+    } else {
+      this.filteredStocks = this.stocks;
+    }
   }
 }
