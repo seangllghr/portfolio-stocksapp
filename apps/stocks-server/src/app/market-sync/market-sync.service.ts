@@ -11,6 +11,7 @@ import { Stock } from '../stock/schemas/stock.schema';
 enum UpdateType {
   Overview = 1,
   TimeSeries,
+  DEFER,
 }
 
 interface UpdateObject {
@@ -30,6 +31,8 @@ export class MarketSyncService {
   ) {}
 
   private updateQueue: UpdateObject[] = [];
+  private frontendCanRequest = true;
+  private frontendRequestCount = 0;
 
   /**
    * Declare a cron job to run the next update task in the queue.
@@ -69,6 +72,13 @@ export class MarketSyncService {
     Logger.log('Initializing update queue');
     const numUpdates = await this.populateUpdateQueue();
     Logger.log(`Queued ${numUpdates} updates`);
+  }
+
+  async getStockList(): Promise<string[]> {
+    const results = await this.stockModel.aggregate().match({}).project({_id: 0, Symbol: 1});
+    const list = []
+    results.forEach(result => list.push(result.Symbol));
+    return list
   }
 
   /**
@@ -130,10 +140,40 @@ export class MarketSyncService {
       case UpdateType.TimeSeries:
         await this.runTimeSeriesUpdate(updateSpec.symbol);
         break;
+      case UpdateType.DEFER:
+        Logger.debug('Deferred update for front-end request');
+        break;
       default:
         // This should be unreachable, because enums, but it doesn't hurt
         throw new RangeError('Invalid update type');
     }
+  }
+
+  /**
+   * Push an empty 'defer' update to the queue so the frontend can make a direct
+   * call to the AlphaVantage API without exceeding the API call limits.
+   * Obviously, if we're not currently making update calls, there's not much of
+   * a reason to do this. Either way, set a timeout and don't let the user do
+   * it again for 12 seconds.
+   */
+  async deferNextUpdate(): Promise<boolean> {
+    const canRequest = this.frontendCanRequest;
+    if (canRequest) {
+      if (this.updateQueue.length > 0)
+        this.updateQueue.unshift({updateType: UpdateType.DEFER, symbol: ''});
+      if (this.frontendRequestCount < 3){
+        Logger.debug('Accepted frontend request deferment')
+        this.frontendRequestCount++;
+      } else {
+        Logger.debug('Frontend requests/minute reached. Setting timeout')
+        this.frontendCanRequest = false;
+        setTimeout(() => {
+          this.frontendCanRequest = true;
+          this.frontendRequestCount = 0;
+        }, 60000);
+      }
+    }
+    return canRequest;
   }
 
   /**
