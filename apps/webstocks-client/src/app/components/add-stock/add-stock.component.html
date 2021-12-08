@@ -1,3 +1,15 @@
-<article>
+<form>
   <h2>Add a Stock</h2>
-</article>
+  <webstocks-search-bar
+    [placeholder]="'Something something something GME...'"
+  ></webstocks-search-bar>
+  <menu>
+    <webstocks-menu-button
+      [text]="'Search'"
+    ></webstocks-menu-button>
+    <webstocks-menu-button
+      [text]="'Cancel'"
+      (click)="onCancelClick()"
+    ></webstocks-menu-button>
+  </menu>
+</form>

@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { MenuAction, UiService } from '../../services/ui-service.service';
 
 @Component({
   selector: 'webstocks-add-stock',
   templateUrl: './add-stock.component.html',
   styleUrls: ['./add-stock.component.scss']
 })
-export class AddStockComponent implements OnInit {
+export class AddStockComponent {
+  constructor(private uiService: UiService) {
 
-  constructor() { }
-
-  ngOnInit(): void {
   }
 
+  onSearchClick(): void {
+    console.log('Searching');
+  }
+
+  onCancelClick(): void {
+    this.uiService.setMenuAction(MenuAction.BACK);
+  }
 }
