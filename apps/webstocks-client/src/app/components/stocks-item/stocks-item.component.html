@@ -1,4 +1,4 @@
-<button (click)="onSelect()">
-  <span class="symbol">{{ stock.Symbol }}</span>
-  <span class="lastPrice">{{ lastPrice }}</span>
+<button type="button" aria-labelledby="symbol" (click)="onSelect()">
+  <span id="symbol">{{ stock.Symbol }}</span>
+  <span id="lastPrice">{{ lastPrice }}</span>
 </button>

@@ -56,6 +56,10 @@ $palette-orange-b: #fe8019;
   border: 0 solid $palette-bg2;
 }
 
+@mixin border-all {
+  border-width: .125rem;
+}
+
 @mixin border-top {
   border-top-width: .125rem;
 }
@@ -70,4 +74,23 @@ $palette-orange-b: #fe8019;
 
 @mixin border-left {
   border-left-width: .125rem;
+}
+
+@mixin ui-button {
+  &:hover {
+    background: $palette-bg3;
+  }
+  &:active {
+    background: $palette-fg4;
+    color: $palette-bg1;
+  }
+}
+
+@mixin icon-button {
+    &:hover {
+      color: $palette-fg0;
+    }
+    &:active {
+      color: $palette-fg2;
+    }
 }

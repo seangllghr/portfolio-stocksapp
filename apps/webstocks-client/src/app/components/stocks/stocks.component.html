@@ -1,5 +1,8 @@
+<webstocks-search-bar [placeholder]="'Filter stock list...'"></webstocks-search-bar>
 <p *ngIf="stocks.length === 0">Loading stocks...</p>
-<webstocks-stocks-item
-  (selectStockEvent)="onSelectStock($event)"
-  *ngFor="let stock of stocks"
-  [stock]="stock"></webstocks-stocks-item>
+<ul>
+  <webstocks-stocks-item
+    (selectStockEvent)="onSelectStock($event)"
+    *ngFor="let stock of stocks"
+    [stock]="stock"></webstocks-stocks-item>
+</ul>

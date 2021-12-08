@@ -9,18 +9,11 @@ button {
   @include ui-dark;
   @include ui-border;
   @include border-left;
+  @include ui-button;
   height: 100%;
   display: flex;
   align-items: center;
   padding: 0.5rem;
-
-  &:hover {
-    background: $palette-bg3;
-  }
-  &:active {
-    background: $palette-fg4;
-    color: $palette-bg1;
-  }
 
   span {
     font-size: 1.2rem;

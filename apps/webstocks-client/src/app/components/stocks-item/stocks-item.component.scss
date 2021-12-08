@@ -1,9 +1,7 @@
 @import '~/src/variables.scss';
 
 :host {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  display: list-item;
   @include stock-list-border;
   @include border-top;
 
@@ -14,14 +12,12 @@
 
 button {
   @include ui-dark;
+  @include ui-button;
+  width: 100%;
   border: none;
   padding: .5rem 1rem;
   display: flex;
   justify-content: space-between;
   font-size: 1.4rem;
-
-  &:hover {
-    background: $palette-bg2;
-  }
 
 }

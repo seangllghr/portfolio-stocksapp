@@ -4,6 +4,10 @@
 @import url('https://fontlibrary.org//face/libertinus-sans');
 @import './variables.scss';
 
+*:focus-visible {
+  outline: .125rem solid $palette-fg0;
+}
+
 html {
   background-color: $palette-bg;
   color: $palette-fg;
