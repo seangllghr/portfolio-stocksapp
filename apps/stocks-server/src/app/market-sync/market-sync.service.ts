@@ -9,8 +9,8 @@ import * as config from '../../assets/config.json';
 import { Stock } from '../stock/schemas/stock.schema';
 
 enum UpdateType {
-  Overview = 1,
-  TimeSeries,
+  OVERVIEW = 1,
+  TIME_SERIES,
   DEFER,
 }
 
@@ -100,14 +100,14 @@ export class MarketSyncService {
       const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
       if (!existingRecord) {
         this.updateQueue.push({
-          updateType: UpdateType.Overview,
+          updateType: UpdateType.OVERVIEW,
           symbol: symbol,
         });
         Logger.debug(`Queued overview update for ${symbol}`);
         numUpdates++;
       }
       this.updateQueue.push({
-        updateType: UpdateType.TimeSeries,
+        updateType: UpdateType.TIME_SERIES,
         symbol: symbol,
       });
       Logger.debug(`Queued time series update for ${symbol}`);
@@ -134,10 +134,10 @@ export class MarketSyncService {
     switch (updateSpec.updateType) {
       // A switch statement here allows us to expand the update cycle as the
       // data model evolves. We switch on the string value for readability.
-      case UpdateType.Overview:
+      case UpdateType.OVERVIEW:
         await this.runOverviewUpdate(updateSpec.symbol);
         break;
-      case UpdateType.TimeSeries:
+      case UpdateType.TIME_SERIES:
         await this.runTimeSeriesUpdate(updateSpec.symbol);
         break;
       case UpdateType.DEFER:
@@ -235,7 +235,7 @@ export class MarketSyncService {
         `${symbol} not found in local db. Deferring time series update.`
       );
       this.updateQueue.push({
-        updateType: UpdateType.TimeSeries,
+        updateType: UpdateType.TIME_SERIES,
         symbol: symbol,
       });
     }
