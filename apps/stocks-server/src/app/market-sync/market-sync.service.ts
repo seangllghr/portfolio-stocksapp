@@ -7,6 +7,7 @@ import * as csv from 'csv/sync';
 import { firstValueFrom } from 'rxjs';
 import * as config from '../../assets/config.json';
 import { Stock } from '../stock/schemas/stock.schema';
+import { Match, SearchResults } from '@portfolio-stocksapp/shared-data-model';
 
 enum UpdateType {
   OVERVIEW = 1,
@@ -156,25 +157,49 @@ export class MarketSyncService {
    * it's not empty. Either way, we hard limit the client to four calls for the
    * sixty-second timeout starting with the first request.
    */
-  async deferNextUpdate(): Promise<string> {
-    const frontendCallLimit = 4 // Real call limit - 1 (for headroom)
-    const canRequest = (this.frontendCanRequest) ? config.upstreamAPI.key : '';
-    if (this.frontendCanRequest) {
-      if (this.updateQueue.length > 0)
-        this.updateQueue.unshift({updateType: UpdateType.DEFER, symbol: ''});
-      this.frontendRequestCount++;
-      if (this.frontendRequestCount < frontendCallLimit) {
-        Logger.debug('Accepted frontend request deferment')
-      } else {
-        Logger.debug('Frontend requests/minute reached. Setting timeout')
-        this.frontendCanRequest = false;
-        setTimeout(() => {
-          this.frontendCanRequest = true;
-          this.frontendRequestCount = 0;
-        }, 60000);
+  async upstreamSearch(keyword: string): Promise<SearchResults> {
+    if (!this.frontendCanRequest) return { success: false, reason: 'Over call limit' };
+    // set up the query
+    const queryUri =
+      'https://alphavantage.co/query?function=SYMBOL_SEARCH'
+    // make the request and parse the results
+    const response = await firstValueFrom(
+      this.httpService.get(queryUri, {
+        params: {
+          keywords: keyword,
+          apikey: config.upstreamAPI.key,
+          datatype: 'csv'
+        }
+      })
+    );
+    const results: Match[] = csv.parse(response.data, {
+      columns: true,
+      cast: (value, context) =>  {
+        if (context.header) return value;
+        if (context.column === 'matchScore') {
+          return Number.parseFloat(value);
+        } else {
+          return value;
+        }
       }
+    })
+
+    if (this.updateQueue.length > 0)
+      this.updateQueue.unshift({ updateType: UpdateType.DEFER, symbol: '' });
+    this.frontendRequestCount++;
+    const frontendCallLimit = 4 // Real call limit - 1 (for headroom)
+    if (this.frontendRequestCount < frontendCallLimit) {
+      Logger.debug('Accepted frontend request deferment')
+    } else {
+      Logger.debug('Frontend requests/minute reached. Setting timeout')
+      this.frontendCanRequest = false;
+      setTimeout(() => {
+        this.frontendCanRequest = true;
+        this.frontendRequestCount = 0;
+      }, 60000);
     }
-    return canRequest;
+
+    return { success: true, matches: results };
   }
 
   /**
