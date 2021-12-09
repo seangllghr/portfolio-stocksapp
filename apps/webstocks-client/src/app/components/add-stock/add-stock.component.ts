@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { SearchResults } from '@portfolio-stocksapp/shared-data-model';
+import { BackendService } from '../../services/backend.service';
 import { MenuAction, UiService } from '../../services/ui.service';
 
 @Component({
@@ -7,12 +9,30 @@ import { MenuAction, UiService } from '../../services/ui.service';
   styleUrls: ['./add-stock.component.scss']
 })
 export class AddStockComponent {
-  constructor(private uiService: UiService) {
+  keyword = '';
+  searchResults: SearchResults = { success: false, reason: '' }
+  constructor(
+    private backend: BackendService,
+    private uiService: UiService,
+  ) {}
 
+  onKeywordChange(keyword: string) {
+    this.keyword = keyword;
   }
 
   onSearchClick(): void {
-    console.log('Searching');
+    if (!this.keyword) {
+      this.searchResults = {
+        success: false,
+        reason: 'Please provide a keyword!'
+      }
+      return;
+    }
+    console.log(`Searching for ${this.keyword}`);
+    this.backend.getSearchResults(this.keyword).subscribe(results => {
+      this.searchResults = results;
+      console.log(results);
+    });
   }
 
   onCancelClick(): void {

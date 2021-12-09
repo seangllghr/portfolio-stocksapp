@@ -2,14 +2,22 @@
   <h2>Add a Stock</h2>
   <webstocks-search-bar
     [placeholder]="'Something something something GME...'"
+    (textChange)="onKeywordChange($event)"
   ></webstocks-search-bar>
   <menu>
     <webstocks-menu-button
       [text]="'Search'"
+      (click)="onSearchClick()"
     ></webstocks-menu-button>
     <webstocks-menu-button
-      [text]="'Cancel'"
+      [text]="(searchResults.matches) ? 'Done' : 'Cancel'"
       (click)="onCancelClick()"
     ></webstocks-menu-button>
   </menu>
 </form>
+<ul *ngIf="searchResults.success" style="list-style: none;">
+  <li *ngFor="let match of searchResults.matches">{{ match.symbol }}</li>
+</ul>
+<p *ngIf="(!searchResults.success) && searchResults.reason">
+  {{ searchResults.reason }}
+</p>
