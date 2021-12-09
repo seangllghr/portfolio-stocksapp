@@ -184,19 +184,24 @@ export class MarketSyncService {
       }
     })
 
+    // If we have updates queued, defer the next one
     if (this.updateQueue.length > 0)
       this.updateQueue.unshift({ updateType: UpdateType.DEFER, symbol: '' });
+
+    // If this is the first update since the count reset, start the reset timer
+    if (this.frontendRequestCount == 0) setTimeout(() => {
+        this.frontendCanRequest = true;
+        this.frontendRequestCount = 0;
+      }, 60000);
+
+    // Count this request against our requests/minute limit
     this.frontendRequestCount++;
     const frontendCallLimit = 4 // Real call limit - 1 (for headroom)
     if (this.frontendRequestCount < frontendCallLimit) {
       Logger.debug('Accepted frontend request deferment')
     } else {
-      Logger.debug('Frontend requests/minute reached. Setting timeout')
+      Logger.debug('Frontend requests/minute reached.')
       this.frontendCanRequest = false;
-      setTimeout(() => {
-        this.frontendCanRequest = true;
-        this.frontendRequestCount = 0;
-      }, 60000);
     }
 
     return { success: true, matches: results };
