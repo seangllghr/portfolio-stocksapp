@@ -150,20 +150,21 @@ export class MarketSyncService {
   }
 
   /**
-   * Push an empty 'defer' update to the queue so the frontend can make a direct
-   * call to the AlphaVantage API without exceeding the API call limits.
-   * Obviously, if we're not currently making update calls, there's not much of
-   * a reason to do this. Either way, set a timeout and don't let the user do
-   * it again for 12 seconds.
+   * Let the client know if it can make an API call to the upstream provider.
+   * Since we run against a limited third-party API, we push (technically,
+   * 'unshift', since it goes to the front) a deferment to the update queue if
+   * it's not empty. Either way, we hard limit the client to four calls for the
+   * sixty-second timeout starting with the first request.
    */
-  async deferNextUpdate(): Promise<boolean> {
-    const canRequest = this.frontendCanRequest;
-    if (canRequest) {
+  async deferNextUpdate(): Promise<string> {
+    const frontendCallLimit = 4 // Real call limit - 1 (for headroom)
+    const canRequest = (this.frontendCanRequest) ? config.upstreamAPI.key : '';
+    if (this.frontendCanRequest) {
       if (this.updateQueue.length > 0)
         this.updateQueue.unshift({updateType: UpdateType.DEFER, symbol: ''});
-      if (this.frontendRequestCount < 3){
+      this.frontendRequestCount++;
+      if (this.frontendRequestCount < frontendCallLimit) {
         Logger.debug('Accepted frontend request deferment')
-        this.frontendRequestCount++;
       } else {
         Logger.debug('Frontend requests/minute reached. Setting timeout')
         this.frontendCanRequest = false;
