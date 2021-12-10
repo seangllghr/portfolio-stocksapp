@@ -207,6 +207,25 @@ export class MarketSyncService {
     return { success: true, matches: results };
   }
 
+  async addStock(symbol: string) {
+    const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
+    if (existingRecord) {
+      return { success: false, message: 'Stock already exists' }
+    } else {
+      this.updateQueue.push({
+        updateType: UpdateType.OVERVIEW,
+        symbol: symbol
+      })
+      this.updateQueue.push({
+          updateType: UpdateType.TIME_SERIES,
+          symbol: symbol
+      })
+      if (!this.schedulerRegistry.getCronJob(updateJobName).running)
+        this.schedulerRegistry.getCronJob(updateJobName).start()
+      return { success: true, message: 'Stock added to update queue' }
+    }
+  }
+
   /**
    * Update company overview information
    *
