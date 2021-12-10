@@ -22,12 +22,16 @@ export class AddStockComponent {
     return this._errorMessage;
   }
 
-  set errorMessage(message: string) {
-    if (message) {
-      this._errorMessage = `Failed to add stock: ${message}`;
-    } else {
-      this._errorMessage = '';
-    }
+  set searchErrorMessage(message: string) {
+    this._errorMessage = `Search failed: ${message}`;
+  }
+
+  set addErrorMessage(message: string) {
+    this._errorMessage = `Failed to add stock: ${message}`;
+  }
+
+  clearErrorMessage(): void {
+    this._errorMessage = '';
   }
 
   onKeywordChange(keyword: string) {
@@ -42,9 +46,11 @@ export class AddStockComponent {
       }
       return;
     }
-    if (this.errorMessage) this.errorMessage = '';
+    if (this.addErrorMessage) this.addErrorMessage = '';
     this.backend.getSearchResults(this.keyword).subscribe(results => {
       this.searchResults = results;
+      if (!results.success && results.reason)
+        this.searchErrorMessage = results.reason;
     });
   }
 
@@ -61,16 +67,16 @@ export class AddStockComponent {
   }
 
   onAddStock(match: Match): void {
-    this.errorMessage = '';
+    this.clearErrorMessage();
     this.backend.addStock(match.symbol).subscribe(result => {
       if (result.success) {
         this.uiService.setMenuAction(MenuAction.REFRESH);
         this.searchResults.matches = this.removeResult(match.symbol);
       } else if (result.message === 'Stock already exists') {
         this.searchResults.matches = this.removeResult(match.symbol);
-        this.errorMessage = result.message;
+        this.addErrorMessage = result.message;
       } else {
-        this.errorMessage = result.message;
+        this.addErrorMessage = result.message;
       }
     })
   }
