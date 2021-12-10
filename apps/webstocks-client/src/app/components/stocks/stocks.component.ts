@@ -36,10 +36,13 @@ export class StocksComponent {
   refreshStocks(): void {
     this.stockSubscription.unsubscribe();
     this.stocks = [];
+    this.updateFilteredList();
     this.stockSubscription = this.stockService
       .getStocks()
-      .subscribe((stocks) => (this.stocks = stocks));
-    this.updateFilteredList();
+      .subscribe((stocks) => {
+        this.stocks = stocks;
+        this.updateFilteredList();
+      });
   }
 
   onSelectStock(stock: Stock): void {

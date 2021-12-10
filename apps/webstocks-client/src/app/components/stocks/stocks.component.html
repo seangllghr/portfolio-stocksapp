@@ -2,7 +2,7 @@
   [placeholder]="'Filter stock list...'"
   (textChange)="onFilterChange($event)"
 ></webstocks-search-bar>
-<p *ngIf="stocks.length === 0">Loading stocks...</p>
+<p *ngIf="filteredStocks.length === 0">Loading stocks...</p>
 <ul>
   <webstocks-stocks-item
     (selectStockEvent)="onSelectStock($event)"
