@@ -15,8 +15,12 @@
     ></webstocks-menu-button>
   </menu>
 </form>
-<ul *ngIf="searchResults.success" style="list-style: none;">
-  <li *ngFor="let match of searchResults.matches">{{ match.symbol }}</li>
+<ul *ngIf="searchResults.success">
+  <webstocks-search-result
+    *ngFor="let match of searchResults.matches"
+    [result]="match"
+    (addStock)="onAddStock($event)"
+  ></webstocks-search-result>
 </ul>
 <p *ngIf="(!searchResults.success) && searchResults.reason">
   {{ searchResults.reason }}

@@ -2,6 +2,7 @@
 
 :host {
   text-align: center;
+  max-height: 100%;
 }
 
 webstocks-search-bar {
@@ -15,4 +16,9 @@ menu {
     @include ui-border;
     @include border-all;
   }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
 }

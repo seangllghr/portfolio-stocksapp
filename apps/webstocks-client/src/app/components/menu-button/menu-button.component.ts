@@ -9,4 +9,5 @@ import { IconName } from '@fortawesome/fontawesome-svg-core';
 export class MenuButtonComponent {
   @Input() icon!: IconName;
   @Input() text?: string;
+  @Input() label?: string;
 }

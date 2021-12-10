@@ -5,6 +5,6 @@
   [(ngModel)]="text"
   (ngModelChange)="onModelChange()"
 />
-<button type="button" (click)="clearSearch()">
+<button type="button" (click)="clearSearch()" aria-label="Clear search">
   <fa-icon [icon]="['fas', 'backspace']"></fa-icon>
 </button>

@@ -46,7 +46,22 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden scroll;
+  scrollbar-width: thin;
+  scrollbar-color: $palette-fg3 $palette-bg;
   z-index: 2;
+
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+  &::-webkit-scrollbar-track {
+    background: $palette-bg;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $palette-fg3;
+    border-radius: .25rem;
+    border: .125rem solid $palette-bg;
+  }
 }
 
 img {

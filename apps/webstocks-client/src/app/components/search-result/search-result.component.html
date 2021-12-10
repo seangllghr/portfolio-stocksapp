@@ -1,0 +1,15 @@
+<div>
+  <header>
+    <h3>
+      <strong>{{ result.symbol }}</strong>
+      {{ result.name }}
+    </h3>
+  </header>
+  <p>{{ result.region }}</p>
+</div>
+
+<webstocks-menu-button
+  [icon]="'plus'"
+  [label]="'Add ' + result.symbol"
+  (click)="onClick()"
+></webstocks-menu-button>

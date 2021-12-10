@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SearchResults } from '@portfolio-stocksapp/shared-data-model';
+import { Match, SearchResults } from '@portfolio-stocksapp/shared-data-model';
 import { BackendService } from '../../services/backend.service';
 import { MenuAction, UiService } from '../../services/ui.service';
 
@@ -37,5 +37,9 @@ export class AddStockComponent {
 
   onCancelClick(): void {
     this.uiService.setMenuAction(MenuAction.BACK);
+  }
+
+  onAddStock(match: Match): void {
+    console.log(`Add stock ${match.symbol} to database`);
   }
 }

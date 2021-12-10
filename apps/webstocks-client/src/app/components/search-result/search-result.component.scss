@@ -1,0 +1,31 @@
+@import '~/src/variables.scss';
+
+:host {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+  text-align: left;
+  width: 100%;
+}
+
+h3 {
+  font-weight: normal;
+  margin: 0;
+  strong {
+    display: block;
+    font-weight: bold;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+webstocks-menu-button {
+  @include ui-border;
+  @include border-all;
+  align-self: center;
+  display: block;
+  height: fit-content;
+}
