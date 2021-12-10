@@ -16,4 +16,14 @@ export class MarketSyncController {
   ): Promise<{ success: boolean; message: string }> {
     return await this.marketSyncService.addStock(symbol);
   }
+
+  @Get('stop-update')
+  stopUpdate(): void {
+    this.marketSyncService.stopUpdate();
+  }
+
+  @Get('force-update')
+  startFullUpdate(): void {
+    this.marketSyncService.startUpdate(true);
+  }
 }

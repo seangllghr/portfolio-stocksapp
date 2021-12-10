@@ -89,7 +89,9 @@ export class MarketSyncService {
    * Populate update queue with update objects, to be processed by runNextUpdate
    */
   async populateUpdateQueue(): Promise<number> {
-    // Stop the update job so we don't update before the list is filled
+    // Stop the update job while we populate the list. We don't need the full
+    // stop sequence here, so we call the SchedulerRegistry directly, rather
+    // than use this.stopUpdate().
     this.schedulerRegistry.getCronJob(updateJobName).stop();
     if (this.updateQueue.length > 0) return 0; // return if queue not empty
     let numUpdates = 0;
@@ -117,8 +119,32 @@ export class MarketSyncService {
       Logger.debug(`Queued time series update for ${symbol}`);
       numUpdates++;
     }
-    this.schedulerRegistry.getCronJob(updateJobName).start();
+    this.startUpdate();
     return numUpdates;
+  }
+
+  startUpdate(full = false): void {
+    const updateJob = this.schedulerRegistry.getCronJob(updateJobName);
+    if (full) {
+      this.populateUpdateQueue();
+    } else if (~updateJob.running) {
+      updateJob.start();
+      Logger.debug('Starting update job.');
+    };
+  }
+
+  stopUpdate(complete = false): void {
+    const updateJob = this.schedulerRegistry.getCronJob(updateJobName);
+    if (updateJob.running) {
+      updateJob.stop();
+      if (!complete) this.updateQueue = []; // Force clear the update queue
+      const updateState = (complete) ? 'complete' : 'stopped';
+      const nextUpdate = this.schedulerRegistry
+        .getCronJob(repopulateJobName)
+        .nextDate()
+        .toISOString();
+      Logger.log(`Update ${updateState}. Next update at ${nextUpdate}`)
+    }
   }
 
   /**
@@ -126,12 +152,7 @@ export class MarketSyncService {
    */
   async runNextUpdate(): Promise<void> {
     if (this.updateQueue.length == 0) {
-      const nextUpdate = this.schedulerRegistry
-        .getCronJob(repopulateJobName)
-        .nextDate()
-        .toISOString();
-      Logger.log(`Update complete. Next update at ${nextUpdate}`);
-      this.schedulerRegistry.getCronJob(updateJobName).stop();
+      this.stopUpdate();
       return;
     }
     const updateSpec = this.updateQueue.shift();
