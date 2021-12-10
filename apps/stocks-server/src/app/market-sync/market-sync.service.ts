@@ -184,7 +184,6 @@ export class MarketSyncService {
   async upstreamSearch(keyword: string): Promise<SearchResults> {
     if (!this.frontendCanRequest)
       return { success: false, reason: 'Over call limit' };
-    // set up the query
     const queryUri = 'https://alphavantage.co/query?function=SYMBOL_SEARCH';
     // make the request and parse the results
     const response = await firstValueFrom(
@@ -208,6 +207,12 @@ export class MarketSyncService {
       },
     });
 
+    this.deferNextUpdate();
+
+    return { success: true, matches: results };
+  }
+
+  deferNextUpdate(): void {
     // If we have updates queued, defer the next one
     if (this.updateQueue.length > 0)
       this.updateQueue.unshift({ updateType: UpdateType.DEFER, symbol: '' });
@@ -228,8 +233,6 @@ export class MarketSyncService {
       Logger.debug('Frontend requests/minute reached.');
       this.frontendCanRequest = false;
     }
-
-    return { success: true, matches: results };
   }
 
   async addStock(
@@ -238,18 +241,30 @@ export class MarketSyncService {
     const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
     if (existingRecord) {
       return { success: false, message: 'Stock already exists' };
+    } else if (!this.frontendCanRequest || this.frontendRequestCount >= 2) {
+      const message =
+        'Adding stock would exceed call limit. Please try again in one minute.';
+      return { success: false, message: message };
     } else {
-      this.updateQueue.push({
-        updateType: UpdateType.OVERVIEW,
-        symbol: symbol,
-      });
-      this.updateQueue.push({
-        updateType: UpdateType.TIME_SERIES,
-        symbol: symbol,
-      });
-      if (!this.schedulerRegistry.getCronJob(updateJobName).running)
-        this.schedulerRegistry.getCronJob(updateJobName).start();
-      return { success: true, message: 'Stock added to update queue' };
+      try {
+        this.deferNextUpdate();
+        await this.runOverviewUpdate(symbol);
+        this.deferNextUpdate();
+        await this.runTimeSeriesUpdate(symbol);
+        return { success: true, message: 'Stock added to update queue' };
+      } catch (error) {
+        let message = 'Something went wrong on our end'
+        if (error.name === 'ValidationError') {
+          message = `${symbol} does not appear to exist upstream`;
+          Logger.debug('Caught validation error while updating stock overview');
+          Logger.debug(`  Stock ${message}`);
+        } else {
+          Logger.debug('Unexpected error while updating stock overview');
+          Logger.debug(`  Type: ${error.name}`);
+          Logger.debug(`  Message: ${error.message}`);
+        }
+        return { success: false, message: message }
+      }
     }
   }
 
@@ -264,11 +279,15 @@ export class MarketSyncService {
     if (existingRecord) {
       Logger.debug(`Overview update found existing record for ${symbol}`);
     } else {
-      const queryUri =
-        'https://alphavantage.co/query?function=OVERVIEW'
-        + `&symbol=${symbol}`
-        + `&apikey=${config.upstreamAPI.key}`;
-      const response = await firstValueFrom(this.httpService.get(queryUri));
+      const queryUri = 'https://alphavantage.co/query?function=OVERVIEW';
+      const response = await firstValueFrom(
+        this.httpService.get(queryUri, {
+          params: {
+            symbol: symbol,
+            apikey: config.upstreamAPI.key,
+          },
+        })
+      );
       const overviewData = response.data;
       await this.stockModel.insertMany(overviewData);
       Logger.debug(`Added ${overviewData.Name} to the database`);
@@ -287,11 +306,18 @@ export class MarketSyncService {
     const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
     if (existingRecord) {
       const queryUri =
-        'https://alphavantage.co/query?function=TIME_SERIES_DAILY'
-        + `&symbol=${symbol}`
-        + '&interval=30min&outputsize=full&datatype=csv'
-        + `&apikey=${config.upstreamAPI.key}`;
-      const response = await firstValueFrom(this.httpService.get(queryUri));
+        'https://alphavantage.co/query?function=TIME_SERIES_DAILY';
+      const response = await firstValueFrom(
+        this.httpService.get(queryUri, {
+          params: {
+            symbol: symbol,
+            interval: '30min',
+            outputsize: 'full',
+            datatype: 'csv',
+            apikey: config.upstreamAPI.key,
+          },
+        })
+      );
       const timeSeriesData = csv.parse(response.data, {
         columns: true,
         cast: (value, context) => {
