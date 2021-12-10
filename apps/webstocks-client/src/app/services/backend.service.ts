@@ -11,6 +11,14 @@ export class BackendService {
 
   constructor(private http: HttpClient) {}
 
+  addStock(symbol: string): Observable<{ success: boolean, message: string }> {
+    return this.http.post<{ success: boolean, message: string }>(
+      `${this.apiUrl}/market-sync/add`,
+      {},
+      { params: new HttpParams().set('symbol', symbol) }
+    )
+  }
+
   getStock(symbol: string): Observable<Stock> {
     return this.http.get<Stock>(`${this.apiUrl}/stock/${symbol}`);
   }

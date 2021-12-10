@@ -15,6 +15,7 @@
     ></webstocks-menu-button>
   </menu>
 </form>
+<p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 <ul *ngIf="searchResults.success">
   <webstocks-search-result
     *ngFor="let match of searchResults.matches"

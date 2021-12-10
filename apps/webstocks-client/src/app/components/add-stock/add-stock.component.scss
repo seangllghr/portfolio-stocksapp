@@ -3,6 +3,7 @@
 :host {
   text-align: center;
   max-height: 100%;
+  max-width: 60%;
 }
 
 webstocks-search-bar {
@@ -16,6 +17,10 @@ menu {
     @include ui-border;
     @include border-all;
   }
+}
+
+p.error {
+  color: $palette-red-b;
 }
 
 ul {

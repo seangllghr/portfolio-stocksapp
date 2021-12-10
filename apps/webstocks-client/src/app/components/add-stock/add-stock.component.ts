@@ -11,10 +11,24 @@ import { MenuAction, UiService } from '../../services/ui.service';
 export class AddStockComponent {
   keyword = '';
   searchResults: SearchResults = { success: false, reason: '' }
+  private _errorMessage = '';
+
   constructor(
     private backend: BackendService,
     private uiService: UiService,
   ) {}
+
+  get errorMessage(): string {
+    return this._errorMessage;
+  }
+
+  set errorMessage(message: string) {
+    if (message) {
+      this._errorMessage = `Failed to add stock: ${message}`;
+    } else {
+      this._errorMessage = '';
+    }
+  }
 
   onKeywordChange(keyword: string) {
     this.keyword = keyword;
@@ -28,10 +42,9 @@ export class AddStockComponent {
       }
       return;
     }
-    console.log(`Searching for ${this.keyword}`);
+    if (this.errorMessage) this.errorMessage = '';
     this.backend.getSearchResults(this.keyword).subscribe(results => {
       this.searchResults = results;
-      console.log(results);
     });
   }
 
@@ -39,7 +52,26 @@ export class AddStockComponent {
     this.uiService.setMenuAction(MenuAction.BACK);
   }
 
+  removeResult(symbol: string): Match[] {
+    const newResults: Match[] = [];
+    this.searchResults.matches?.forEach(match => {
+      if (match.symbol !== symbol) newResults.push(match);
+    });
+    return newResults;
+  }
+
   onAddStock(match: Match): void {
-    console.log(`Add stock ${match.symbol} to database`);
+    this.errorMessage = '';
+    this.backend.addStock(match.symbol).subscribe(result => {
+      if (result.success) {
+        this.uiService.setMenuAction(MenuAction.REFRESH);
+        this.searchResults.matches = this.removeResult(match.symbol);
+      } else if (result.message === 'Stock already exists') {
+        this.searchResults.matches = this.removeResult(match.symbol);
+        this.errorMessage = result.message;
+      } else {
+        this.errorMessage = result.message;
+      }
+    })
   }
 }
