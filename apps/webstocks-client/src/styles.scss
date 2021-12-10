@@ -8,6 +8,22 @@
   outline: .125rem solid $palette-fg0;
 }
 
+* {
+  scrollbar-color: $palette-fg3 $palette-bg;
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+  &::-webkit-scrollbar-track {
+    background: $palette-bg;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $palette-fg3;
+    border-radius: .25rem;
+    border: .125rem solid $palette-bg;
+  }
+}
+
 html {
   background-color: $palette-bg;
   color: $palette-fg;

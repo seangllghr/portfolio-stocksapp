@@ -1,11 +1,16 @@
 :host {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 p {
   text-align: center;
   margin: 1rem;
+}
+
+nav {
+  overflow: hidden auto;
 }
 
 ul {

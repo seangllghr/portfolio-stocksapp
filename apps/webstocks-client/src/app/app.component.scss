@@ -2,14 +2,13 @@
 
 :host {
   align-items: stretch;
-  display: block;
   font-family: $font-stack;
   border: .125rem solid $palette-fg3;
   display: grid;
   grid:
     [row1-start] "nav nav" 2.75rem [row1-end]
     [row2-start] "list main" [row2-end]
-    / 1fr 2fr;
+    / 9fr 16fr;
   height: 100vh;
 }
 
@@ -36,9 +35,13 @@ header {
   }
 }
 
-nav {
+aside {
   @include ui-border;
   @include border-right;
+  grid-area: list;
+  display: flex;
+  justify-content: stretch;
+  overflow: hidden;
 }
 
 main {
@@ -47,21 +50,7 @@ main {
   align-items: center;
   justify-content: center;
   overflow: hidden scroll;
-  scrollbar-width: thin;
-  scrollbar-color: $palette-fg3 $palette-bg;
   z-index: 2;
-
-  &::-webkit-scrollbar {
-    width: 0.5rem;
-  }
-  &::-webkit-scrollbar-track {
-    background: $palette-bg;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: $palette-fg3;
-    border-radius: .25rem;
-    border: .125rem solid $palette-bg;
-  }
 }
 
 img {
