@@ -11,7 +11,9 @@ export class MarketSyncController {
   }
 
   @Post('add')
-  async addStock(@Query('symbol') symbol: string) {
+  async addStock(
+    @Query('symbol') symbol: string
+  ): Promise<{ success: boolean; message: string }> {
     return await this.marketSyncService.addStock(symbol);
   }
 }

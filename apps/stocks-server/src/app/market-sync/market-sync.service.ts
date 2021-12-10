@@ -43,7 +43,7 @@ export class MarketSyncService {
    * around this limitation. For a production system, this could be relaxed.
    */
   @Cron('*/12 * * * * *', {
-    name: updateJobName
+    name: updateJobName,
   })
   runUpdateTask(): void {
     this.runNextUpdate();
@@ -57,7 +57,7 @@ export class MarketSyncService {
    * really make sense to update more often than this, anyway.
    */
   @Cron('0 20 * * *', {
-    name: repopulateJobName
+    name: repopulateJobName,
   })
   async repopulateUpdateQueue() {
     Logger.log('Repopulating the update queue');
@@ -76,10 +76,13 @@ export class MarketSyncService {
   }
 
   async getStockList(): Promise<string[]> {
-    const results = await this.stockModel.aggregate().match({}).project({_id: 0, Symbol: 1});
-    const list = []
-    results.forEach(result => list.push(result.Symbol));
-    return list
+    const results = await this.stockModel
+      .aggregate()
+      .match({})
+      .project({ _id: 0, Symbol: 1 });
+    const list = [];
+    results.forEach((result) => list.push(result.Symbol));
+    return list;
   }
 
   /**
@@ -126,8 +129,8 @@ export class MarketSyncService {
       const nextUpdate = this.schedulerRegistry
         .getCronJob(repopulateJobName)
         .nextDate()
-        .toISOString()
-      Logger.log(`Update complete. Next update at ${nextUpdate}`)
+        .toISOString();
+      Logger.log(`Update complete. Next update at ${nextUpdate}`);
       this.schedulerRegistry.getCronJob(updateJobName).stop();
       return;
     }
@@ -158,71 +161,74 @@ export class MarketSyncService {
    * sixty-second timeout starting with the first request.
    */
   async upstreamSearch(keyword: string): Promise<SearchResults> {
-    if (!this.frontendCanRequest) return { success: false, reason: 'Over call limit' };
+    if (!this.frontendCanRequest)
+      return { success: false, reason: 'Over call limit' };
     // set up the query
-    const queryUri =
-      'https://alphavantage.co/query?function=SYMBOL_SEARCH'
+    const queryUri = 'https://alphavantage.co/query?function=SYMBOL_SEARCH';
     // make the request and parse the results
     const response = await firstValueFrom(
       this.httpService.get(queryUri, {
         params: {
           keywords: keyword,
           apikey: config.upstreamAPI.key,
-          datatype: 'csv'
-        }
+          datatype: 'csv',
+        },
       })
     );
     const results: Match[] = csv.parse(response.data, {
       columns: true,
-      cast: (value, context) =>  {
+      cast: (value, context) => {
         if (context.header) return value;
         if (context.column === 'matchScore') {
           return Number.parseFloat(value);
         } else {
           return value;
         }
-      }
-    })
+      },
+    });
 
     // If we have updates queued, defer the next one
     if (this.updateQueue.length > 0)
       this.updateQueue.unshift({ updateType: UpdateType.DEFER, symbol: '' });
 
     // If this is the first update since the count reset, start the reset timer
-    if (this.frontendRequestCount == 0) setTimeout(() => {
+    if (this.frontendRequestCount == 0)
+      setTimeout(() => {
         this.frontendCanRequest = true;
         this.frontendRequestCount = 0;
       }, 60000);
 
     // Count this request against our requests/minute limit
     this.frontendRequestCount++;
-    const frontendCallLimit = 4 // Real call limit - 1 (for headroom)
+    const frontendCallLimit = 4; // Real call limit - 1 (for headroom)
     if (this.frontendRequestCount < frontendCallLimit) {
-      Logger.debug('Accepted frontend request deferment')
+      Logger.debug('Accepted frontend request deferment');
     } else {
-      Logger.debug('Frontend requests/minute reached.')
+      Logger.debug('Frontend requests/minute reached.');
       this.frontendCanRequest = false;
     }
 
     return { success: true, matches: results };
   }
 
-  async addStock(symbol: string) {
+  async addStock(
+    symbol: string
+  ): Promise<{ success: boolean; message: string }> {
     const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
     if (existingRecord) {
-      return { success: false, message: 'Stock already exists' }
+      return { success: false, message: 'Stock already exists' };
     } else {
       this.updateQueue.push({
         updateType: UpdateType.OVERVIEW,
-        symbol: symbol
-      })
+        symbol: symbol,
+      });
       this.updateQueue.push({
-          updateType: UpdateType.TIME_SERIES,
-          symbol: symbol
-      })
+        updateType: UpdateType.TIME_SERIES,
+        symbol: symbol,
+      });
       if (!this.schedulerRegistry.getCronJob(updateJobName).running)
-        this.schedulerRegistry.getCronJob(updateJobName).start()
-      return { success: true, message: 'Stock added to update queue' }
+        this.schedulerRegistry.getCronJob(updateJobName).start();
+      return { success: true, message: 'Stock added to update queue' };
     }
   }
 
@@ -238,9 +244,9 @@ export class MarketSyncService {
       Logger.debug(`Overview update found existing record for ${symbol}`);
     } else {
       const queryUri =
-        'https://alphavantage.co/query?function=OVERVIEW' +
-        `&symbol=${symbol}` +
-        `&apikey=${config.upstreamAPI.key}`;
+        'https://alphavantage.co/query?function=OVERVIEW'
+        + `&symbol=${symbol}`
+        + `&apikey=${config.upstreamAPI.key}`;
       const response = await firstValueFrom(this.httpService.get(queryUri));
       const overviewData = response.data;
       await this.stockModel.insertMany(overviewData);
