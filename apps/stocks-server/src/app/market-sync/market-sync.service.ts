@@ -20,8 +20,8 @@ interface UpdateObject {
   symbol: string;
 }
 
-const updateJobName = 'updateJob';
-const repopulateJobName = 'repopulateJob';
+const UPDATE_JOB_NAME = 'updateJob';
+const REPOPULATE_JOB_NAME = 'repopulateJob';
 
 @Injectable()
 export class MarketSyncService {
@@ -43,7 +43,7 @@ export class MarketSyncService {
    * around this limitation. For a production system, this could be relaxed.
    */
   @Cron('*/12 * * * * *', {
-    name: updateJobName,
+    name: UPDATE_JOB_NAME,
   })
   runUpdateTask(): void {
     this.runNextUpdate();
@@ -57,7 +57,7 @@ export class MarketSyncService {
    * really make sense to update more often than this, anyway.
    */
   @Cron('0 20 * * *', {
-    name: repopulateJobName,
+    name: REPOPULATE_JOB_NAME,
   })
   async repopulateUpdateQueue() {
     Logger.log('Repopulating the update queue');
@@ -92,7 +92,7 @@ export class MarketSyncService {
     // Stop the update job while we populate the list. We don't need the full
     // stop sequence here, so we call the SchedulerRegistry directly, rather
     // than use this.stopUpdate().
-    this.schedulerRegistry.getCronJob(updateJobName).stop();
+    this.schedulerRegistry.getCronJob(UPDATE_JOB_NAME).stop();
     if (this.updateQueue.length > 0) return 0; // return if queue not empty
     let numUpdates = 0;
 
@@ -124,7 +124,7 @@ export class MarketSyncService {
   }
 
   startUpdate(full = false): void {
-    const updateJob = this.schedulerRegistry.getCronJob(updateJobName);
+    const updateJob = this.schedulerRegistry.getCronJob(UPDATE_JOB_NAME);
     if (full) {
       this.populateUpdateQueue();
     } else if (~updateJob.running) {
@@ -134,13 +134,13 @@ export class MarketSyncService {
   }
 
   stopUpdate(complete = false): void {
-    const updateJob = this.schedulerRegistry.getCronJob(updateJobName);
+    const updateJob = this.schedulerRegistry.getCronJob(UPDATE_JOB_NAME);
     if (updateJob.running) {
       updateJob.stop();
       if (!complete) this.updateQueue = []; // Force clear the update queue
       const updateState = (complete) ? 'complete' : 'stopped';
       const nextUpdate = this.schedulerRegistry
-        .getCronJob(repopulateJobName)
+        .getCronJob(REPOPULATE_JOB_NAME)
         .nextDate()
         .toISOString();
       Logger.log(`Update ${updateState}. Next update at ${nextUpdate}`)
