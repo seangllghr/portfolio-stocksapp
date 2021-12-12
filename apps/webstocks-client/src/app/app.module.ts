@@ -29,6 +29,7 @@ import { StockDetailComponent } from './components/stock-detail/stock-detail.com
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { SearchResultComponent } from './components/search-result/search-result.component';
+import { StockChartComponent } from './components/stock-chart/stock-chart.component';
 
 const routes = [
   {
@@ -69,6 +70,7 @@ const routes = [
     WelcomeComponent,
     SearchBarComponent,
     SearchResultComponent,
+    StockChartComponent,
   ],
   imports: [
     BrowserModule,

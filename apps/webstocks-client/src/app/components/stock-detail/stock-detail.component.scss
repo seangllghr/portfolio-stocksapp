@@ -6,12 +6,20 @@
 }
 
 article {
-  margin: .5rem;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid:
+    [row1-start] "header empty" 2rem [row1-end]
+    [row2-start] "content content" [row2-end]
+    / 3fr 4fr;
 }
 
 header {
+  grid-area: header;
   display: flex;
   align-items: center;
+  margin: .5rem;
 
   h2 {
     margin: 0;
@@ -25,6 +33,9 @@ header {
 }
 
 dl {
+  grid-area: content;
+  z-index: 2;
+  margin: .5rem;
   list-style: none;
   max-width: 20rem;
 
