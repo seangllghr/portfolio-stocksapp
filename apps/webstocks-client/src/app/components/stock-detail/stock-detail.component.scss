@@ -34,6 +34,17 @@ dl {
   }
 
   dd {
+    span.delta {
+      &:before {
+        padding-left: 0.5rem;
+        content: '(';
+      }
+      &:after {
+        padding-left: 0.25rem;
+        content: ')';
+      }
+    }
+
     &.industry {
       text-transform: capitalize;
     }

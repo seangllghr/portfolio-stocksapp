@@ -1,5 +1,4 @@
 <article *ngIf="showStockDetail">
-
   <header>
     <button aria-label="close" (click)="closeStockDetail()">
       <fa-icon [icon]="['fas','times']"></fa-icon>
@@ -28,13 +27,21 @@
     </li>
     <li>
       <dt class='price'>Last Close</dt>
-      <dd class='price' [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}">
+      <dd class='price'
+        [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}"
+      >
         {{ lastClose.price }}
-        (
-        {{ (lastClose.delta) }}%
-        <fa-icon *ngIf="lastClose.trend" [icon]="['fas', 'angle-up']"></fa-icon>
-        <fa-icon *ngIf="!lastClose.trend" [icon]="['fas', 'angle-down']"></fa-icon>
-        )
+        <span class="delta">
+          {{ lastClose.delta }}%
+          <fa-icon
+            *ngIf="lastClose.trend"
+            [icon]="['fas', 'angle-up']"
+          ></fa-icon>
+          <fa-icon
+            *ngIf="!lastClose.trend"
+            [icon]="['fas', 'angle-down']"
+          ></fa-icon>
+        </span>
       </dd>
     </li>
   </dl>
