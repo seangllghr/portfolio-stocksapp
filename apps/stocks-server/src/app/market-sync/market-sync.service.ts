@@ -106,7 +106,12 @@ export class MarketSyncService {
     for (const symbol of stocks) {
       Logger.debug(`Queueing updates for ${symbol}`);
       const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
-      if (!existingRecord) {
+
+      // There are two times when we might want to update the company overview:
+      // when it's not already there, or about once a month. Rather than set a
+      // cron job, just update all of the overviews on the first of the month.
+      const today = new Date().getUTCDate();
+      if (!existingRecord || today == 1) {
         this.updateQueue.push({
           updateType: UpdateType.OVERVIEW,
           symbol: symbol,
@@ -223,7 +228,7 @@ export class MarketSyncService {
       case UpdateType.OVERVIEW:
         Logger.debug(`Running overview update for ${updateSpec.symbol}`);
         await this.runOverviewUpdate(updateSpec.symbol);
-        success = true;
+        success = true; // If we got here without flinging errors, all is well
         break;
       case UpdateType.TIME_SERIES:
         Logger.debug(`Running time series update for ${updateSpec.symbol}`);
