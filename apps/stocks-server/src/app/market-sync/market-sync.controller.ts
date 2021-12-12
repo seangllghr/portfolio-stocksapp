@@ -23,7 +23,7 @@ export class MarketSyncController {
   }
 
   @Get('force-update')
-  startFullUpdate(): void {
+  forceTimeSeriesUpdate(): void {
     this.marketSyncService.startUpdate(true);
   }
 }

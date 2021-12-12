@@ -326,10 +326,10 @@ export class MarketSyncService {
         let message = 'Something went wrong on our end'
         if (error.name === 'ValidationError') {
           message = `${symbol} does not appear to exist upstream`;
-          Logger.debug('Caught validation error while updating stock overview');
+          Logger.debug('Caught validation error while adding stock');
           Logger.debug(`  Stock ${message}`);
         } else {
-          Logger.debug('Unexpected error while updating stock overview');
+          Logger.debug('Unexpected error while adding stock');
           Logger.debug(`  Type: ${error.name}`);
           Logger.debug(`  Message: ${error.message}`);
         }
