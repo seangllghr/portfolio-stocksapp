@@ -49,8 +49,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden scroll;
-  z-index: 2;
+  overflow: hidden auto;
 }
 
 img {
