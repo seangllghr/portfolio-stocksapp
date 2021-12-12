@@ -216,14 +216,18 @@ export class MarketSyncService {
       return;
     }
     const updateSpec = this.updateQueue.shift();
+    let success: boolean;
     switch (updateSpec.updateType) {
       // A switch statement here allows us to expand the update cycle as the
       // data model evolves. We switch on the string value for readability.
       case UpdateType.OVERVIEW:
+        Logger.debug(`Running overview update for ${updateSpec.symbol}`);
         await this.runOverviewUpdate(updateSpec.symbol);
+        success = true;
         break;
       case UpdateType.TIME_SERIES:
-        await this.runTimeSeriesUpdate(updateSpec.symbol);
+        Logger.debug(`Running time series update for ${updateSpec.symbol}`);
+        success = await this.runTimeSeriesUpdate(updateSpec.symbol);
         break;
       case UpdateType.DEFER:
         Logger.debug('Deferred update for front-end request');
@@ -232,6 +236,7 @@ export class MarketSyncService {
         // This should be unreachable, because enums, but it doesn't hurt
         throw new RangeError('Invalid update type');
     }
+    Logger.debug(`Update ${(success) ? 'was' : 'was not'} successful.`)
   }
 
   /**
@@ -310,8 +315,8 @@ export class MarketSyncService {
         this.deferNextUpdate();
         await this.runOverviewUpdate(symbol);
         this.deferNextUpdate();
-        await this.runTimeSeriesUpdate(symbol);
-        return { success: true, message: 'Stock added to update queue' };
+        const timeResult = await this.runTimeSeriesUpdate(symbol);
+        return { success: timeResult, message: 'Stock added successfully' };
       } catch (error) {
         let message = 'Something went wrong on our end'
         if (error.name === 'ValidationError') {
@@ -362,44 +367,35 @@ export class MarketSyncService {
    * Atlas test cluster with a whopping 512MB of storage, so overwriting is more
    * space-efficient; (b) frankly, it's easier.
    */
-  async runTimeSeriesUpdate(symbol: string): Promise<void> {
+  async runTimeSeriesUpdate(symbol: string): Promise<boolean> {
     const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
-    if (existingRecord) {
-      const queryUri =
-        'https://alphavantage.co/query?function=TIME_SERIES_DAILY';
-      const response = await firstValueFrom(
-        this.httpService.get(queryUri, {
-          params: {
-            symbol: symbol,
-            interval: '30min',
-            outputsize: 'full',
-            datatype: 'csv',
-            apikey: config.upstreamAPI.key,
-          },
-        })
-      );
-      const timeSeriesData = csv.parse(response.data, {
-        columns: true,
-        cast: (value, context) => {
-          if (context.header) return value;
-          if (context.column === 'timestamp') {
-            return value;
-          } else {
-            return Number.parseFloat(value);
-          }
+    if (!existingRecord) return false;
+    const queryUri =
+      'https://alphavantage.co/query?function=TIME_SERIES_DAILY';
+    const response = await firstValueFrom(
+      this.httpService.get(queryUri, {
+        params: {
+          symbol: symbol,
+          interval: '30min',
+          outputsize: 'full',
+          datatype: 'csv',
+          apikey: config.upstreamAPI.key,
         },
-      });
-      existingRecord.priceHistory = timeSeriesData;
-      await existingRecord.save();
-      Logger.debug(`Updated time series for ${symbol}`);
-    } else {
-      Logger.debug(
-        `${symbol} not found in local db. Deferring time series update.`
-      );
-      this.updateQueue.push({
-        updateType: UpdateType.TIME_SERIES,
-        symbol: symbol,
-      });
-    }
+      })
+    );
+    const timeSeriesData = csv.parse(response.data, {
+      columns: true,
+      cast: (value, context) => {
+        if (context.header) return value;
+        if (context.column === 'timestamp') {
+          return value;
+        } else {
+          return Number.parseFloat(value);
+        }
+      },
+    });
+    existingRecord.priceHistory = timeSeriesData;
+    await existingRecord.save();
+    return true;
   }
 }
