@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import * as config from '../../assets/config.json';
 import { Stock } from '../stock/schemas/stock.schema';
 import { Match, SearchResults } from '@portfolio-stocksapp/shared-data-model';
+import moment = require('moment-timezone');
 
 enum UpdateType {
   OVERVIEW = 1,
@@ -56,8 +57,9 @@ export class MarketSyncService {
    * calls per day. Since we're only using daily time series data, it doesn't
    * really make sense to update more often than this, anyway.
    */
-  @Cron('0 20 * * *', {
+  @Cron('0 1 * * 2-6', {
     name: REPOPULATE_JOB_NAME,
+    timeZone: 'UTC'
   })
   async repopulateUpdateQueue() {
     Logger.log('Repopulating the update queue');
@@ -88,7 +90,7 @@ export class MarketSyncService {
   /**
    * Populate update queue with update objects, to be processed by runNextUpdate
    */
-  async populateUpdateQueue(): Promise<number> {
+  async populateUpdateQueue(forceTimeSeries = false): Promise<number> {
     // Stop the update job while we populate the list. We don't need the full
     // stop sequence here, so we call the SchedulerRegistry directly, rather
     // than use this.stopUpdate().
@@ -112,22 +114,80 @@ export class MarketSyncService {
         Logger.debug(`Queued overview update for ${symbol}`);
         numUpdates++;
       }
-      this.updateQueue.push({
-        updateType: UpdateType.TIME_SERIES,
-        symbol: symbol,
-      });
-      Logger.debug(`Queued time series update for ${symbol}`);
-      numUpdates++;
+
+      // If we should run a time series update, queue one
+      if (this.checkTimeSeriesUpdate(existingRecord, forceTimeSeries)) {
+        numUpdates++;
+        this.updateQueue.push({
+          updateType: UpdateType.TIME_SERIES,
+          symbol: symbol,
+        });
+      }
     }
     this.startUpdate();
     return numUpdates;
   }
 
-  startUpdate(full = false): void {
+  /**
+   * Check whether the time series data for a stock should update
+   * 
+   * Ideally, we should update if the data is older than the most recent market
+   * close, but the current data model doesn't track market hours for individual
+   * securities. NYSE after-hours trading closes at 20:00 ET, which lines up
+   * neatly with a 01:00Z refresh time---it's an hour after close in summer, and
+   * at-close in winter. This results in a mostly rational update schedule for
+   * European markets, too. With a once-per-day cron job, somebody's bound to be
+   * off-kilter no matter what; with this scheme, it's the Asian markets, but I
+   * don't think AlphaVantage gives us data for them, anyway.
+   */
+  private checkTimeSeriesUpdate(
+    existingRecord: Stock & { _id: unknown; },
+    force: boolean
+  ): boolean {
+    const symbol = existingRecord.Symbol;
+    Logger.debug(`Evaluating time series update for ${symbol}:`);
+    let updateTimeSeries = false;
+    if (!existingRecord) {
+      Logger.debug(`Queued time series update for new stock ${symbol}`);
+      updateTimeSeries = true;
+    } else if (force) {
+      Logger.debug(`Force-updating time series for ${symbol}`);
+      updateTimeSeries = true;
+    } else {
+      const today = new Date().getUTCDay();
+      // Assume our data is from NYSE after-hours close, Eastern time. Append
+      // that time to the date stamp, then convert to UTC so we can get a date
+      let timestamp = existingRecord.priceHistory[0].timestamp + 'T20:00:00';
+      timestamp = moment.tz(timestamp, 'America/New_York').utc().format();
+      Logger.debug(`Most recent timestamp for ${symbol} was ${timestamp}.`);
+      const lastUpdateDay = new Date(timestamp).getUTCDay();
+      switch (today) {
+        // For the weekend
+        case 0: // Saturday (Sunday morning, UTC)
+        case 1: // Sunday (Monday morning, UTC)
+          updateTimeSeries = (lastUpdateDay != 6);
+          Logger.debug(
+            `It's the weekend. This update ${(force) ? 'is' : 'is not'} forced.`
+            + ` ${symbol} ${(updateTimeSeries) ? 'will' : 'won\'t'} update`
+          );
+          break;
+        default: // For the rest of the week, just check if we've updated today
+          updateTimeSeries = (lastUpdateDay != today);
+          Logger.debug(
+            `It's a weekday. This update ${(force) ? 'is' : 'is not'} forced.`
+            + ` ${symbol} ${(updateTimeSeries) ? 'will' : 'won\'t'} update`
+          );
+      }
+    }
+    return updateTimeSeries;
+  }
+
+  startUpdate(force = false): void {
     const updateJob = this.schedulerRegistry.getCronJob(UPDATE_JOB_NAME);
-    if (full) {
-      this.populateUpdateQueue();
-    } else if (~updateJob.running) {
+    if (force) {
+      this.populateUpdateQueue(true)
+        .then(numUpdates => Logger.log(`Queued ${numUpdates} updates`));
+    } else if (!updateJob.running) {
       updateJob.start();
       Logger.debug('Starting update job.');
     };
@@ -152,7 +212,7 @@ export class MarketSyncService {
    */
   async runNextUpdate(): Promise<void> {
     if (this.updateQueue.length == 0) {
-      this.stopUpdate();
+      this.stopUpdate(true);
       return;
     }
     const updateSpec = this.updateQueue.shift();
