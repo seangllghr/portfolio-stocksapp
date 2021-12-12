@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
 import { Stock } from '@portfolio-stocksapp/shared-data-model';
-import { UiService, MenuAction } from '../../services/ui.service';
+import { UiService } from '../../services/ui.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,31 +13,27 @@ export class StocksComponent {
   @Input() filter = '';
   stocks: Stock[] = [];
   filteredStocks: Stock[] = [];
-  selectedStock: Stock = new Stock();
   stockSubscription: Subscription;
 
   constructor(
-    private stockService: BackendService,
+    private backend: BackendService,
     private uiService: UiService
   ) {
-    this.stockSubscription = this.stockService
+    this.stockSubscription = this.backend
       .getStocks()
       .subscribe((stocks) => {
         this.stocks = stocks;
         this.updateFilteredList();
       });
-    this.uiService.onMenuAction().subscribe((action) => {
-      if (action === MenuAction.REFRESH) {
-        this.refreshStocks();
-      }
-    });
+    // The only time menu actions get here is when the stock list changes
+    this.uiService.onMenuAction().subscribe(() => this.refreshStocks());
   }
 
   refreshStocks(): void {
     this.stockSubscription.unsubscribe();
     this.stocks = [];
     this.updateFilteredList();
-    this.stockSubscription = this.stockService
+    this.stockSubscription = this.backend
       .getStocks()
       .subscribe((stocks) => {
         this.stocks = stocks;

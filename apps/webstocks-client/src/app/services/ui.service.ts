@@ -36,7 +36,7 @@ export class UiService {
   appMainTitle = 'WebSTOCKS';
 
   constructor(
-    private stockService: BackendService,
+    private backend: BackendService,
     private location: Location,
     private router: Router,
     private title: Title
@@ -46,7 +46,7 @@ export class UiService {
     // If the Symbol matches an existing stock (it should), pick that one
     let newStock = new Stock();
     try {
-      newStock = await firstValueFrom(this.stockService.getStock(symbol));
+      newStock = await firstValueFrom(this.backend.getStock(symbol));
       this.router.navigate(['stock', `${symbol}`]);
       this.title.setTitle(`${this.appMainTitle} — ${symbol}`);
     } catch (err) {
@@ -81,6 +81,13 @@ export class UiService {
         this.title.setTitle(`${this.appMainTitle} — Add Stock`);
         break;
       case MenuAction.DELETE:
+        this.backend
+          .deleteStock(this.stockDetailState.selectedStock.Symbol)
+          .subscribe(() => {
+            this.router.navigate(['/']);
+            this.menuAction.next(action);
+          });
+        break;
       case MenuAction.REFRESH:
         this.menuAction.next(action);
         break;

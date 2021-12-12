@@ -19,6 +19,11 @@ export class BackendService {
     )
   }
 
+  deleteStock(symbol: string): Observable<{ deletedCount: number }> {
+    const url = `${this.apiUrl}/stock/${symbol}`;
+    return this.http.delete<{ deletedCount: number }>(url);
+  }
+
   getStock(symbol: string): Observable<Stock> {
     return this.http.get<Stock>(`${this.apiUrl}/stock/${symbol}`);
   }
