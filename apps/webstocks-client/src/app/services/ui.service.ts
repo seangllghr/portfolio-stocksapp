@@ -42,6 +42,10 @@ export class UiService {
     private title: Title
   ) {}
 
+  getStockSelection(): StockDetailState {
+    return this.stockDetailState;
+  }
+
   async setStockSelection(symbol: string): Promise<void> {
     // If the Symbol matches an existing stock (it should), pick that one
     let newStock = new Stock();

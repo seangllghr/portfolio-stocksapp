@@ -1,3 +1,10 @@
 :host {
-  grid-area: content;
+  grid-row-start: 2;
+  grid-row-end: 4;
+  grid-column: 1 / 3;
+  z-index: 2;
+}
+
+aside {
+  height: 100%;
 }

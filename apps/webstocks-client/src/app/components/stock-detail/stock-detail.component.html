@@ -5,47 +5,46 @@
     </button>
     <h2>{{ stock.Symbol }}</h2>
     <button aria-label="collapse" (click)="toggleCollapseDetail()">
-      <fa-icon [icon]="['fas','angle-down']"></fa-icon>
+      <fa-icon *ngIf="!collapse" [icon]="['fas','angle-up']"></fa-icon>
+      <fa-icon *ngIf="collapse" [icon]="['fas','angle-down']"></fa-icon>
     </button>
   </header>
-  <dl [ngClass]="{'collapse': collapse}">
-    <li>
-      <dt class='name'>Name</dt>
-      <dd class='name'>{{ stock.Name }}</dd>
-    </li>
-    <li>
-      <dt class='industry'>Industry</dt>
-      <dd class='industry'>{{ stock.Industry.toLowerCase() }}</dd>
-    </li>
-    <li>
-      <dt class='eps'>EPS</dt>
-      <dd class='eps'>{{ stock.EPS }}</dd>
-    </li>
-    <li>
-      <dt class='shares-out'>Shares Outstanding</dt>
-      <dd class='shares-out'>{{ stock.SharesOutstanding }}</dd>
-    </li>
-    <li>
-      <dt class='price'>Last Close</dt>
-      <dd class='price'
-        [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}"
-      >
-        {{ lastClose.price }}
-        <span class="delta">
-          {{ lastClose.delta }}%
-          <fa-icon
-            *ngIf="lastClose.trend"
-            [icon]="['fas', 'angle-up']"
-          ></fa-icon>
-          <fa-icon
-            *ngIf="!lastClose.trend"
-            [icon]="['fas', 'angle-down']"
-          ></fa-icon>
-        </span>
-      </dd>
-    </li>
-  </dl>
+  <section [ngClass]="{'collapse': collapse}">
+    <h3>{{ stock.Name }}</h3>
+    <dl>
+      <li>
+        <dt class='industry'>Industry</dt>
+        <dd class='industry'>{{ stock.Industry.toLowerCase() }}</dd>
+      </li>
+      <li>
+        <dt class='eps'>EPS</dt>
+        <dd class='eps'>{{ stock.EPS }}</dd>
+      </li>
+      <li>
+        <dt class='shares-out'>Shares Outstanding</dt>
+        <dd class='shares-out'>{{ stock.SharesOutstanding }}</dd>
+      </li>
+      <li>
+        <dt class='price'>Last Close</dt>
+        <dd class='price'
+          [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}"
+        >
+          {{ lastClose.price }}
+          <span class="delta">
+            {{ lastClose.delta }}%
+            <fa-icon
+              *ngIf="lastClose.trend"
+              [icon]="['fas', 'angle-up']"
+            ></fa-icon>
+            <fa-icon
+              *ngIf="!lastClose.trend"
+              [icon]="['fas', 'angle-down']"
+            ></fa-icon>
+          </span>
+        </dd>
+      </li>
+    </dl>
+  </section>
   <webstocks-stock-chart
-    [priceHistory]="stock.priceHistory"
   ></webstocks-stock-chart>
 </article>
