@@ -6,8 +6,8 @@
 <nav>
   <ul>
     <webstocks-stocks-item
-      (selectStockEvent)="onSelectStock($event)"
       *ngFor="let stock of filteredStocks"
+      [routerLink]="['stock', stock.Symbol]"
       [stock]="stock"></webstocks-stocks-item>
   </ul>
 </nav>

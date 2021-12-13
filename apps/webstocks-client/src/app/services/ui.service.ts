@@ -75,7 +75,7 @@ export class UiService {
       case MenuAction.BACK:
         this.location.back();
         this.title.setTitle(this.appMainTitle);
-        break
+        break;
       case MenuAction.ADD:
         this.router.navigate(['add']);
         this.title.setTitle(`${this.appMainTitle} — Add Stock`);
