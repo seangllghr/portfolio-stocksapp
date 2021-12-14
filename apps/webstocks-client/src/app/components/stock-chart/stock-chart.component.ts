@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EChartsOption } from 'echarts';
+import * as echarts from 'echarts';
+import { ECharts, EChartsOption } from 'echarts';
 import { StockDetailState, UiService } from '../../services/ui.service';
 
 @Component({
@@ -12,19 +13,26 @@ export class StockChartComponent implements OnInit {
   times: string[] = [];
   data: Array<Array<number>> = []; // each element is [open, close, low, high]
   volumes: number[] = [];
-  options: EChartsOption = {};
+  options: EChartsOption = BASE_OPTIONS;
   updateOptions: unknown;
+  chart: ECharts | null = null;
 
   constructor(private ui: UiService) {
     this.stockDetailState = this.ui.getStockSelection();
     this.ui.onSelectStock().subscribe(state => {
       this.stockDetailState = state;
-      this.setChartData();
+      this.updateChartData();
     })
   }
 
   ngOnInit(): void {
-    this.options = {
+    const elem = document.getElementById('chart');
+    if (elem) this.chart = echarts.init(elem);
+    if (!this.chart)
+      throw Error('Chart failed to initialize correctly.')
+    this.transformChartData();
+    this.chart.setOption({
+      backgroundColor: '#1d2021',
       tooltip: {
         trigger: 'axis',
         backgroundColor: '#1d2021',
@@ -35,59 +43,54 @@ export class StockChartComponent implements OnInit {
         },
         extraCssText: 'font-variant: small-caps;'
       },
+      yAxis: {
+        scale: true,
+        position: 'right',
+        splitLine: {
+          lineStyle: {
+            color: ['#504945']
+          }
+        },
+        axisLabel: {
+          color: '#bdae93'
+        }
+      },
+      grid: {
+        top: 10,
+        left: 5,
+        right: 40,
+        bottom: 10,
+      },
       xAxis: {
         type: 'category',
         data: this.times,
         show: false,
-        scale: true,
-        boundaryGap: false,
-        axisLine: { onZero: false },
-        splitLine: { show: false },
-        min: 'datamin',
-        max: 'dataMax',
       },
-      yAxis: {
-        scale: true,
-        show: false,
-        splitArea: { show: true },
-      },
-      grid: {
-        top: 0,
-        left: 25,
-        right: 25,
-        bottom: 0,
-      },
-      series: [
-        {
-          name: this.stockDetailState.selectedStock.Symbol,
-          type: 'candlestick',
-          data: this.data,
-          itemStyle: {
-            color: '#b8bb26',
-            color0: '#fb4934',
-            borderColor: '#98971a',
-            borderColor0: '#cc241d',
-          }
-        },
-      ],
+      series: [{
+        name: this.stockDetailState.selectedStock.Symbol,
+        type: 'candlestick',
+        data: this.data,
+        itemStyle: {
+          color: '#b8bb26',
+          color0: '#fb4934',
+          borderColor: '#98971a',
+          borderColor0: '#cc241d',
+        }
+      }],
       dataZoom: [
         {
           type: 'inside',
           startValue: this.data.length - 60,
           end: 100,
-        },
-        {
-          type: 'slider',
-          show: false,
-          startValue: this.data.length - 60,
-          end: 100,
         }
       ]
-    }
-    this.setChartData();
+    })
   }
 
-  setChartData() {
+  transformChartData() {
+    this.data = []
+    this.times = []
+    this.volumes = []
     for (const interval of this.stockDetailState.selectedStock.priceHistory) {
       this.times.unshift(interval.timestamp);
       this.data.unshift([
@@ -100,4 +103,19 @@ export class StockChartComponent implements OnInit {
     }
   }
 
+  updateChartData() {
+    this.transformChartData();
+    if (this.chart) this.chart.setOption({
+      xAxis: { data: this.times },
+      series: [{
+        name: this.stockDetailState.selectedStock.Symbol,
+        data: this.data,
+      }],
+      dataZoom: [{ startValue: this.data.length - 60 }]
+    })
+  }
+
+}
+
+const BASE_OPTIONS: EChartsOption = {
 }

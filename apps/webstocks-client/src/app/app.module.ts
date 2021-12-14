@@ -17,7 +17,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { NgxEchartsModule } from 'ngx-echarts';
 
 import { AppComponent } from './app.component';
 import { AddStockComponent } from './components/add-stock/add-stock.component';
@@ -79,7 +78,6 @@ const routes = [
     FontAwesomeModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabledBlocking' }),
-    NgxEchartsModule.forRoot({ echarts: () => import ('echarts') }),
   ],
   providers: [],
   bootstrap: [AppComponent],
