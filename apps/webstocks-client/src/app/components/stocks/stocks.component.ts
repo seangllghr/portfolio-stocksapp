@@ -17,7 +17,7 @@ export class StocksComponent {
 
   constructor(
     private backend: BackendService,
-    private uiService: UiService
+    private ui: UiService
   ) {
     this.stockSubscription = this.backend
       .getStocks()
@@ -26,7 +26,7 @@ export class StocksComponent {
         this.updateFilteredList();
       });
     // The only time menu actions get here is when the stock list changes
-    this.uiService.onMenuAction().subscribe(() => this.refreshStocks());
+    this.ui.onMenuAction().subscribe(() => this.refreshStocks());
   }
 
   refreshStocks(): void {
@@ -42,7 +42,7 @@ export class StocksComponent {
   }
 
   onSelectStock(stock: Stock): void {
-    this.uiService.setStockSelection(stock.Symbol);
+    this.ui.setStockSelection(stock.Symbol);
   }
 
   onFilterChange(filter: string): void {

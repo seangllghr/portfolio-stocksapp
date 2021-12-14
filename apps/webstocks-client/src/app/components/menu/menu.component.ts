@@ -10,22 +10,22 @@ export class MenuComponent {
   title: string;
   showDelete = false;
 
-  constructor(private uiService: UiService) {
-    this.title = this.uiService.appMainTitle;
-    this.uiService
+  constructor(private ui: UiService) {
+    this.title = this.ui.appMainTitle;
+    this.ui
       .onSelectStock()
       .subscribe((state) => (this.showDelete = state.showStockDetail));
   }
 
   addButtonClick(): void {
-    this.uiService.setMenuAction(MenuAction.ADD);
+    this.ui.setMenuAction(MenuAction.ADD);
   }
 
   deleteButtonClick(): void {
-    this.uiService.setMenuAction(MenuAction.DELETE);
+    this.ui.setMenuAction(MenuAction.DELETE);
   }
 
   refreshButtonClick(): void {
-    this.uiService.setMenuAction(MenuAction.REFRESH);
+    this.ui.setMenuAction(MenuAction.REFRESH);
   }
 }

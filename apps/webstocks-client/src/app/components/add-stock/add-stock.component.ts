@@ -15,7 +15,7 @@ export class AddStockComponent {
 
   constructor(
     private backend: BackendService,
-    private uiService: UiService,
+    private ui: UiService,
   ) {}
 
   get errorMessage(): string {
@@ -55,7 +55,7 @@ export class AddStockComponent {
   }
 
   onCancelClick(): void {
-    this.uiService.setMenuAction(MenuAction.BACK);
+    this.ui.setMenuAction(MenuAction.BACK);
   }
 
   removeResult(symbol: string): Match[] {
@@ -70,7 +70,7 @@ export class AddStockComponent {
     this.clearErrorMessage();
     this.backend.addStock(match.symbol).subscribe(result => {
       if (result.success) {
-        this.uiService.setMenuAction(MenuAction.REFRESH);
+        this.ui.setMenuAction(MenuAction.REFRESH);
         this.searchResults.matches = this.removeResult(match.symbol);
       } else if (result.message === 'Stock already exists') {
         this.searchResults.matches = this.removeResult(match.symbol);

@@ -10,9 +10,9 @@ export class AppComponent {
   title: string;
   showStockChart = false;
 
-  constructor(private uiService: UiService) {
-    this.title = this.uiService.appMainTitle;
-    this.uiService
+  constructor(private ui: UiService) {
+    this.title = this.ui.appMainTitle;
+    this.ui
       .onSelectStock()
       .subscribe((state) => (this.showStockChart = state.showStockDetail));
   }

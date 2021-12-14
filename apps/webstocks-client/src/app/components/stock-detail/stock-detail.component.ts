@@ -14,14 +14,14 @@ export class StockDetailComponent implements OnInit {
   collapse = false;
   lastClose = { price: 0, trend: true, delta: '0' };
 
-  constructor(private route: ActivatedRoute, private uiService: UiService) {
+  constructor(private route: ActivatedRoute, private ui: UiService) {
     this.route.paramMap.subscribe((params) => {
-      this.uiService.setStockSelection(params.get('Symbol') || '');
+      this.ui.setStockSelection(params.get('Symbol') || '');
     });
   }
 
   ngOnInit(): void {
-    this.uiService.onSelectStock().subscribe((state) => {
+    this.ui.onSelectStock().subscribe((state) => {
       this.showStockDetail = state.showStockDetail;
       this.stock = state.selectedStock;
       this.lastClose = this.setLastClose();
@@ -29,7 +29,7 @@ export class StockDetailComponent implements OnInit {
   }
 
   closeStockDetail() {
-    this.uiService.unsetStockSelection();
+    this.ui.unsetStockSelection();
   }
 
   toggleCollapseDetail() {
