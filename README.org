@@ -55,6 +55,39 @@ It also implements a ~Stock~ object,
   and the ~lastClose~ derived property.
 The ~Stock~ object is used heavily within the WebSTOCKS client application.
 
+**** WebSTOCKS
+WebSTOCKS is a single-page client application for the STOCK REST API.
+It's built using Angular,
+  which is a Typescript-native component-based front end framework.
+The application provides an interface
+  which can utilize a number of the server's API endpoints.
+Notably, the user can access:
+- a list of all stocks in the database,
+      which can be filtered by symbol
+- a complete* stock detail view,
+      including company overview data
+      and a zoom-able candlestick chart showing price history
+      (*volume data is not included)
+- a component which allows users to query the upstream provider
+      and add stocks from the list of results
+- the ability to delete stocks from the database
+
+Notably absent from the list above
+  is any ability to create and manipulate stock data directly;
+  this was an intentional choice,
+  since the reliance on an upstream data provider
+  and design of the application's UI
+  signify a shift from the API's original purpose,
+  which appeared to be creating and maintaining a database of securities data,
+  to one that focused on analysis and decision-making.
+Similarly, the Industry and Stock report functions have also been subsumed,
+  the latter into the stock list in the database itself —
+  which the user would, presumably, keep updated with stocks of interest.
+Unfortunately,
+  the new data model is not really compatible with the industry report.
+Some future update may include a similar functionality,
+  but it is, for now, a mostly-worthless API endpoint.
+
 *** ~README.org~
 I'm assuming you're familiar with READMEs,
   so I won't waste your time,
