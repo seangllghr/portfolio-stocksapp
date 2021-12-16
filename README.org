@@ -81,8 +81,8 @@ Notably absent from the list above
   which appeared to be creating and maintaining a database of securities data,
   to one that focused on analysis and decision-making.
 Similarly, the Industry and Stock report functions have also been subsumed,
-  the latter into the stock list in the database itself —
-  which the user would, presumably, keep updated with stocks of interest.
+  the latter into the stock list in the database itself — which
+  the user would, presumably, keep updated with stocks of interest.
 Unfortunately,
   the new data model is not really compatible with the industry report.
 Some future update may include a similar functionality,
