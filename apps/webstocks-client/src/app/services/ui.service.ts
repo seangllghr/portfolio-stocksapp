@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Stock, StockInterface } from '@portfolio-stocksapp/shared-data-model';
+import { Stock, StockData } from '@portfolio-stocksapp/shared-data-model';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { BackendService } from './backend.service';
 
@@ -14,7 +14,7 @@ export class StockDetailState {
     return this._selectedStock;
   }
 
-  set selectedStock(stock: StockInterface) {
+  set selectedStock(stock: StockData) {
     this._selectedStock = new Stock(stock);
   }
 

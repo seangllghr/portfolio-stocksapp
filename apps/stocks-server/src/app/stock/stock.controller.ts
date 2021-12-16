@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
+import { StockData } from '@portfolio-stocksapp/shared-data-model';
 import { StockService } from './stock.service';
 
 @Controller('stock')
@@ -7,7 +7,7 @@ export class StockController {
   constructor(private stockService: StockService) {}
 
   @Post()
-  async create(@Body() inputStock: StockInterface) {
+  async create(@Body() inputStock: StockData) {
     const result = await this.stockService.create(inputStock);
     return result;
   }
@@ -25,7 +25,7 @@ export class StockController {
   }
 
   @Patch()
-  async update(@Body() stock: StockInterface) {
+  async update(@Body() stock: StockData) {
     const result = await this.stockService.update(stock.Symbol, stock);
     return result;
   }

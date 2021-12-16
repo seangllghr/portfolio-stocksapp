@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IntervalInterface as Interval, StockInterface as Stock } from '@portfolio-stocksapp/shared-data-model';
+import { IntervalInterface as Interval, StockData as Stock } from '@portfolio-stocksapp/shared-data-model';
 import * as echarts from 'echarts';
 import { ECharts } from 'echarts';
 import { UiService } from '../../services/ui.service';

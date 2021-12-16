@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
+import { StockData } from '@portfolio-stocksapp/shared-data-model';
 import { Model } from 'mongoose';
 import { Stock } from './schemas/stock.schema';
 
@@ -10,7 +10,7 @@ export class StockService {
     @InjectModel(Stock.name) private stockModel: Model<Stock>
   ) {}
 
-  async create(stock: StockInterface) {
+  async create(stock: StockData) {
     if (await this.stockModel.findOne({ Symbol: stock.Symbol })) {
       throw new BadRequestException('Stock already exists.');
     }

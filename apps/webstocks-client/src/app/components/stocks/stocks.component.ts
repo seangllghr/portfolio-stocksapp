@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
-import { Stock } from '@portfolio-stocksapp/shared-data-model';
+import { StockData } from '@portfolio-stocksapp/shared-data-model';
 import { UiService } from '../../services/ui.service';
 import { Subscription } from 'rxjs';
 
@@ -11,8 +11,8 @@ import { Subscription } from 'rxjs';
 })
 export class StocksComponent {
   @Input() filter = '';
-  stocks: Stock[] = [];
-  filteredStocks: Stock[] = [];
+  stocks: StockData[] = [];
+  filteredStocks: StockData[] = [];
   stockSubscription: Subscription;
 
   constructor(
@@ -41,7 +41,7 @@ export class StocksComponent {
       });
   }
 
-  onSelectStock(stock: Stock): void {
+  onSelectStock(stock: StockData): void {
     this.ui.setStockSelection(stock.Symbol);
   }
 

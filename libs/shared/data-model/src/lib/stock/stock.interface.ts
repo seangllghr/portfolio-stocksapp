@@ -1,6 +1,6 @@
 import { IntervalInterface } from './interval.interface';
 
-export interface StockInterface {
+export interface StockData {
   Symbol: string;
   Name: string;
   Industry: string;
@@ -17,7 +17,7 @@ export const blankStock = {
     priceHistory: [],
   }
 
-export class Stock implements StockInterface {
+export class Stock implements StockData {
   Symbol: string;
   Name: string;
   Industry: string;
@@ -25,7 +25,7 @@ export class Stock implements StockInterface {
   SharesOutstanding?: number;
   priceHistory: IntervalInterface[];
 
-  constructor(stock?: StockInterface) {
+  constructor(stock?: StockData) {
     this.Symbol = (stock) ? stock.Symbol : "";
     this.Name = (stock) ? stock.Name : "";
     this.Industry = (stock) ? stock.Industry : "";

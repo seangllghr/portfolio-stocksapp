@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { StockInterface } from '@portfolio-stocksapp/shared-data-model';
+import { StockData } from '@portfolio-stocksapp/shared-data-model';
 import { Document } from 'mongoose';
 import { Interval } from './interval.schema';
 
 @Schema()
-export class Stock extends Document implements StockInterface {
+export class Stock extends Document implements StockData {
   @Prop({ required: true })
   Symbol: string;
 
