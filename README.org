@@ -7,7 +7,7 @@ feel free to take a look around.
 Given the STOCKS Application's monorepo architecture,
   I recognize that it might be a little difficult to find things.
 Here's a quick overview of where everything is.
-I'll try to keep this updated as the project evolves,
+I'll try to keep this updated if things change,
   but it's always going to occupy a lower priority rung than improving project code.
 
 *** Overall Repo Structure
@@ -19,34 +19,41 @@ This makes sharing code and configuration between projects easier,
 Within the monorepo, there are a few important directories:
 - ~apps~ :: runnable applications
 - ~dist~ :: transpiled Javascript code for distribution/execution
-- ~libs~ :: shared libraries used in multiple applications
+- ~libs~ :: shared libraries used in one or more applications
 The monorepo uses Nrwl's ~nx~ tooling,
   which simplifies the process of generating, maintaining, and executing code.
+It adds a bit of overhead,
+  which I don't love,
+  but it made the new developer experience pretty self-explanatory,
+  and the monorepo-specific tooling was invaluable.
 
 **** The STOCKS server
 The stocks server exists in ~apps/stocks-server~;
   it is written in Typescript using the Nest.js framework.
-At this point, the server is incomplete;
-  however, it should be functional.
-Run it using the command ~nx serve stocks-server~
+It implements the full API included in the original STOCKS application,
+  as well as the new endpoints required for the WebSTOCKS application.
 
 ***** The Third-Party Marked Data Service
 The aptly-named ~market-sync~ module adds a service
   which updates the stock data on the local server
   using data obtained from a third-party provider.
 In its current form,
-  the service pulls a list of stocks from the application's ~assets/config.json~
+  the service pulls a list of stocks from the database
   and updates company overview or price history data
   for one stock every 12 seconds — the
   API request rate limit for our third-party provider, [[https://alphavantage.co/][AlphaVantage]].
-Once the WebSTOCKS front-end is built,
-  this data will be migrated into the database itself,
-  and users will be able to query the upstream provider
-  to add additional stocks to the database.
+Since the service is configured to pull daily stock data,
+  we additionally schedule updates to occur at 01:00 UTC,
+  which is about an hour after the NYSE's after-hours session closes in summer
+  and right at close in the winter.
 
 **** The ~StockInterface~ data model
 The ~data~ library (~libs/data~) exports the ~StockInterface~ and ~IntervalInterface~;
   these interfaces enforce the data model across the application.
+It also implements a ~Stock~ object,
+  which provides a default and initialized constructor
+  and the ~lastClose~ derived property.
+The ~Stock~ object is used heavily within the WebSTOCKS client application.
 
 *** ~README.org~
 I'm assuming you're familiar with READMEs,
