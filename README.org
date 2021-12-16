@@ -107,11 +107,12 @@ In fact, Markdown was once my preference for most writing,
 I write my papers in ~org-mode~ and typeset exclusively with LaTeX now
   (XeLaTeX, if you want to be pedantic),
   but ~makepaper~ was one of my first adventures in server-side Javascript,
-  so it's actually reasonable illustration of my growth with the language.
+  so it's actually reasonable illustration of my growth with the language
+  (please read this as “it is an abomination, but I have learned much since”).
 
 I also wanted to comment about the formatting ~org-mode~ source.
 I've taken to using a variation of [[https://sembr.org][Semantic Line Breaks]] in my prose,
-  though I've included some conventions of my own invention.
+  though some of the conventions I use are non-standard.
 The specification's author provides a wonderfully concise explanation
   that I certainly won't improve upon:
 #+begin_quote
