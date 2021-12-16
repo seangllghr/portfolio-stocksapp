@@ -22,10 +22,20 @@ export class AddStockComponent {
     return this._errorMessage;
   }
 
+  /**
+   * Set an error message for a failed search query
+   *
+   * @param {string} message - the error message to set
+   */
   set searchErrorMessage(message: string) {
     this._errorMessage = `Search failed: ${message}`;
   }
 
+  /**
+   * Set an error message when the backend fails to add a stock
+   *
+   * @param {string} message - the error message to set
+   */
   set addErrorMessage(message: string) {
     this._errorMessage = `Failed to add stock: ${message}`;
   }
@@ -38,8 +48,12 @@ export class AddStockComponent {
     this.keyword = keyword;
   }
 
+  /**
+   * Calls the backend service's search method with the given keyword and
+   * waits for results
+   */
   onSearchClick(): void {
-    if (!this.keyword) {
+    if (!this.keyword) { // Complain if the keyword is blank
       this.searchResults = {
         success: false,
         reason: 'Please provide a keyword!'
@@ -58,6 +72,11 @@ export class AddStockComponent {
     this.ui.setMenuAction(MenuAction.BACK);
   }
 
+  /**
+   * Remove a result from the display. Won't remove it from future searches
+   *
+   * @param {string} symbol - the symbol of the stock to remove from the list
+   */
   removeResult(symbol: string): Match[] {
     const newResults: Match[] = [];
     this.searchResults.matches?.forEach(match => {
@@ -66,6 +85,9 @@ export class AddStockComponent {
     return newResults;
   }
 
+  /**
+   * @param {Match} match - the Match object containing the stock's symbol
+   */
   onAddStock(match: Match): void {
     this.clearErrorMessage();
     this.backend.addStock(match.symbol).subscribe(result => {

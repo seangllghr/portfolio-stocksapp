@@ -51,6 +51,11 @@ export class UiService {
     return this.stockDetailState;
   }
 
+  /**
+   * Set the stock selection from the given symbol
+   *
+   * @param {string} symbol - the symbol of the selected stock
+   */
   async setStockSelection(symbol: string): Promise<void> {
     // If the Symbol matches an existing stock (it should), pick that one
     try {
@@ -65,6 +70,9 @@ export class UiService {
     this.stockSelection.next(this.stockDetailState);
   }
 
+  /**
+   * Unset the stock selection and return to the start screen
+   */
   unsetStockSelection(): void {
     this.stockDetailState = new StockDetailState();
     this.router.navigate(['/']);
@@ -72,10 +80,17 @@ export class UiService {
     this.stockSelection.next(this.stockDetailState);
   }
 
+  /**
+   * provide an observable for stock selection changes
+   */
   onSelectStock(): Observable<StockDetailState> {
     return this.stockSelection.asObservable();
   }
 
+  /**
+   * Respond appropriately to the four "menu actions"
+   * @param {MenuAction} action - the action that occurred
+   */
   setMenuAction(action: MenuAction): void {
     switch (action) {
       case MenuAction.BACK:
@@ -100,6 +115,9 @@ export class UiService {
     }
   }
 
+  /**
+   * Provide an observable for forwarded menu actions
+   */
   onMenuAction(): Observable<MenuAction> {
     return this.menuAction.asObservable();
   }

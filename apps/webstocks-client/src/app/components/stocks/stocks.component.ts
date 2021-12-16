@@ -41,15 +41,28 @@ export class StocksComponent {
       });
   }
 
+  /**
+   * Inform the UI service that a new stock has been selected
+   *
+   * @param {Stock} stock - the newly-selected stock
+   */
   onSelectStock(stock: StockData): void {
     this.ui.setStockSelection(stock.Symbol);
   }
 
+  /**
+   * Update the stock list filter text, then call the filtering method
+   *
+   * @param {string} filter - the new filter text
+   */
   onFilterChange(filter: string): void {
     this.filter = filter.toUpperCase();
     this.updateFilteredList();
   }
 
+  /**
+   * Validate that filter is not empty, then filter stock list accordingly
+   */
   updateFilteredList(): void {
     if (this.filter !== '') {
       this.filteredStocks =
