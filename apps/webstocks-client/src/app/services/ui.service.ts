@@ -53,15 +53,15 @@ export class UiService {
 
   async setStockSelection(symbol: string): Promise<void> {
     // If the Symbol matches an existing stock (it should), pick that one
-    let newStock = new Stock();
     try {
-      newStock = await firstValueFrom(this.backend.getStock(symbol));
+      const stockData = await firstValueFrom(this.backend.getStock(symbol));
       this.router.navigate(['stock', `${symbol}`]);
       this.title.setTitle(`${this.appMainTitle} — ${symbol}`);
+      this.stockDetailState = new StockDetailState(new Stock(stockData));
     } catch (err) {
       this.router.navigate(['404']);
+      this.stockDetailState = new StockDetailState();
     }
-    this.stockDetailState = new StockDetailState(newStock);
     this.stockSelection.next(this.stockDetailState);
   }
 
