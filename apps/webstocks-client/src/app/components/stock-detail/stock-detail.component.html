@@ -27,17 +27,17 @@
       <li>
         <dt class='price'>Last Close</dt>
         <dd class='price'
-          [ngClass]="{'up': lastClose.trend, 'down': !lastClose.trend}"
+          [ngClass]="{'up': stock.lastClose.gain, 'down': !stock.lastClose.gain}"
         >
-          {{ lastClose.price }}
-          <span class="delta">
-            {{ lastClose.delta }}%
+          {{ stock.lastClose.price }}
+          <span class="stock.lastClose.delta">
+            {{ stock.lastClose.delta }}%
             <fa-icon
-              *ngIf="lastClose.trend"
+              *ngIf="stock.lastClose.gain"
               [icon]="['fas', 'angle-up']"
             ></fa-icon>
             <fa-icon
-              *ngIf="!lastClose.trend"
+              *ngIf="!stock.lastClose.gain"
               [icon]="['fas', 'angle-down']"
             ></fa-icon>
           </span>

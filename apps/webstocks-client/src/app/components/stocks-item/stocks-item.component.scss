@@ -20,4 +20,11 @@ button {
   justify-content: space-between;
   font-size: 1.4rem;
 
+  span.gain {
+    color: $palette-green-b
+  }
+  span.loss {
+    color: $palette-red-b
+  }
+
 }

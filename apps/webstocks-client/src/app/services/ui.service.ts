@@ -2,16 +2,24 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Stock } from '@portfolio-stocksapp/shared-data-model';
+import { Stock, StockInterface } from '@portfolio-stocksapp/shared-data-model';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { BackendService } from './backend.service';
 
 export class StockDetailState {
-  selectedStock: Stock;
+  _selectedStock: Stock;
   showStockDetail: boolean;
 
+  get selectedStock(): Stock {
+    return this._selectedStock;
+  }
+
+  set selectedStock(stock: StockInterface) {
+    this._selectedStock = new Stock(stock);
+  }
+
   constructor(stock?: Stock) {
-    this.selectedStock = stock || new Stock();
+    this._selectedStock = new Stock(stock) || new Stock();
     this.showStockDetail = stock ? true : false;
   }
 }
@@ -27,10 +35,7 @@ export enum MenuAction {
   providedIn: 'root',
 })
 export class UiService {
-  private stockDetailState: StockDetailState = {
-    selectedStock: new Stock(),
-    showStockDetail: false,
-  };
+  private stockDetailState = new StockDetailState();
   private menuAction = new Subject<MenuAction>();
   private stockSelection = new Subject<StockDetailState>();
   appMainTitle = 'WebSTOCKS';
@@ -61,10 +66,7 @@ export class UiService {
   }
 
   unsetStockSelection(): void {
-    this.stockDetailState = {
-      selectedStock: new Stock(),
-      showStockDetail: false,
-    };
+    this.stockDetailState = new StockDetailState();
     this.router.navigate(['/']);
     this.title.setTitle(this.appMainTitle);
     this.stockSelection.next(this.stockDetailState);

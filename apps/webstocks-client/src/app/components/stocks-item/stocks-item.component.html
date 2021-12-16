@@ -1,4 +1,10 @@
-<button type="button" aria-labelledby="symbol" (click)="onSelect()">
+<button
+  type="button"
+  aria-labelledby="symbol"
+  (click)="onSelect()"
+>
   <span id="symbol">{{ stock.Symbol }}</span>
-  <span id="lastPrice">{{ lastPrice }}</span>
+  <span id="lastPrice"
+    [ngClass]="{'gain': stock.lastClose.gain, 'loss': !stock.lastClose.gain}"
+  >{{ stock.lastClose.price }}</span>
 </button>
