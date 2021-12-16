@@ -77,6 +77,11 @@ export class MarketSyncService {
     Logger.log(`Queued ${numUpdates} updates`);
   }
 
+  /**
+   * Query the database for a list of stocks currently in the database
+   * 
+   * @returns A Promise that resolves to an array of stock symbol strings
+   */
   async getStockList(): Promise<string[]> {
     const results = await this.stockModel
       .aggregate()
@@ -89,6 +94,9 @@ export class MarketSyncService {
 
   /**
    * Populate update queue with update objects, to be processed by runNextUpdate
+   * 
+   * @param forceTimeSeries - whether or not to force the time series update
+   * @returns a Promise yielding the number of updates queued
    */
   async populateUpdateQueue(forceTimeSeries = false): Promise<number> {
     // Stop the update job while we populate the list. We don't need the full
@@ -144,6 +152,10 @@ export class MarketSyncService {
    * European markets, too. With a once-per-day cron job, somebody's bound to be
    * off-kilter no matter what; with this scheme, it's the Asian markets, but I
    * don't think AlphaVantage gives us data for them, anyway.
+   * 
+   * @param existingRecord an existing stock record
+   * @param force whether to update the stock regardless of last update time
+   * @returns true if the stock should be updated
    */
   private checkTimeSeriesUpdate(
     existingRecord: Stock & { _id: unknown; },
@@ -187,6 +199,11 @@ export class MarketSyncService {
     return updateTimeSeries;
   }
 
+  /**
+   * This function calls to populate the update queue, then starts the scheduler
+   * 
+   * @param force - update all stocks, even if they updated recently
+   */
   startUpdate(force = false): void {
     const updateJob = this.schedulerRegistry.getCronJob(UPDATE_JOB_NAME);
     if (force) {
@@ -198,6 +215,12 @@ export class MarketSyncService {
     };
   }
 
+  /**
+   * Shut down the update scheduler and, if necessary, clear the update queue.
+   * Then log the next scheduled update time.
+   * 
+   * @param complete true if all queued updates ran
+   */
   stopUpdate(complete = false): void {
     const updateJob = this.schedulerRegistry.getCronJob(UPDATE_JOB_NAME);
     if (updateJob.running) {
@@ -245,11 +268,11 @@ export class MarketSyncService {
   }
 
   /**
-   * Let the client know if it can make an API call to the upstream provider.
-   * Since we run against a limited third-party API, we push (technically,
-   * 'unshift', since it goes to the front) a deferment to the update queue if
-   * it's not empty. Either way, we hard limit the client to four calls for the
-   * sixty-second timeout starting with the first request.
+   * Send a search query to the upstream provider. I wanted to do this in the
+   * client, for performance reasons, but I couldn't quite make it work.
+   * 
+   * @param keyword the keyword to send upstream to get search results
+   * @returns a SearchResults object constructed from upstream's response
    */
   async upstreamSearch(keyword: string): Promise<SearchResults> {
     if (!this.frontendCanRequest)
@@ -282,6 +305,9 @@ export class MarketSyncService {
     return { success: true, matches: results };
   }
 
+  /**
+   * Defer the next scheduled update so as not to exceed the API call limit
+   */
   deferNextUpdate(): void {
     // If we have updates queued, defer the next one
     if (this.updateQueue.length > 0)
@@ -305,6 +331,13 @@ export class MarketSyncService {
     }
   }
 
+  /**
+   * Add a stock from the upstream provider to the database by executing an
+   * overview update and a time series update, and defer other updates.
+   * 
+   * @param {string} symbol the symbol of the stock to add to the database
+   * @returns {Promise} an object containing success/failure and a message
+   */
   async addStock(
     symbol: string
   ): Promise<{ success: boolean; message: string }> {
@@ -343,6 +376,8 @@ export class MarketSyncService {
    *
    * For now, we only update company overview data when the company doesn't yet
    * exist in the database.
+   * 
+   * @param symbol the stock ticker symbol for the overview request
    */
   async runOverviewUpdate(symbol: string): Promise<void> {
     const existingRecord = await this.stockModel.findOne({ Symbol: symbol });
@@ -371,6 +406,9 @@ export class MarketSyncService {
    * advantages: (a) we're running the current application against a MongoDB
    * Atlas test cluster with a whopping 512MB of storage, so overwriting is more
    * space-efficient; (b) frankly, it's easier.
+   * 
+   * @param symbol the stock ticker symbol for the time series request
+   * @returns false if the company isn't in the local database
    */
   async runTimeSeriesUpdate(symbol: string): Promise<boolean> {
     const existingRecord = await this.stockModel.findOne({ Symbol: symbol });

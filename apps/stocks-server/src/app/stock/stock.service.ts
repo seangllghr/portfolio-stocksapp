@@ -10,6 +10,11 @@ export class StockService {
     @InjectModel(Stock.name) private stockModel: Model<Stock>
   ) {}
 
+  /**
+   * Add a given stock to the database
+   * @param stock a StockData object containing the stock to add
+   * @returns a Stock schema object with an ID.
+   */
   async create(stock: StockData) {
     if (await this.stockModel.findOne({ Symbol: stock.Symbol })) {
       throw new BadRequestException('Stock already exists.');
@@ -18,6 +23,11 @@ export class StockService {
     return createdStock.save();
   }
 
+  /**
+   * Search for a specific stock in the database
+   * @param symbol the symbol to search in the database
+   * @returns the result as a Stock document and ID
+   */
   async findBySymbol(symbol: string) {
     const result = await this.stockModel.findOne({ Symbol: symbol });
     if (result) {
@@ -27,10 +37,20 @@ export class StockService {
     }
   }
 
+  /**
+   * Fetch the full list of stocks from the database
+   * @returns all of the stocks
+   */
   async findAll() {
     return await this.stockModel.find({});
   }
 
+  /**
+   * Manually update a stock with new data
+   * @param symbol the ticker symbol of the stock to update
+   * @param updateObject an object with fields to update and their new values
+   * @returns the result of the update
+   */
   async update(symbol: string, updateObject: unknown) {
     const result = await this.stockModel.updateOne(
       { Symbol: symbol },
@@ -45,6 +65,11 @@ export class StockService {
     }
   }
 
+  /**
+   * Delete a stock from the database
+   * @param symbol the ticker symbol of the stock to delete
+   * @returns a count of the number of stocks deleted
+   */
   async deleteStock(symbol: string) {
     const result = await this.stockModel.deleteOne({ Symbol: symbol });
     if (result.deletedCount > 0) {
