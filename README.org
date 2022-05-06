@@ -1,7 +1,11 @@
 * The STOCKS Application
-This is the repo that will one day contain the full-stack rendition of my STOCKS
-application for my professional portfolio. Right now, it's pretty barren, but
-feel free to take a look around.
+The STOCKS Application is a complete full-stack web application,
+  designed and built for my Computer Science capstone experience
+  at Southern New Hampshire University.
+The application consists of a back end server and front end web application
+  in a single monorepo;
+  both components are written in TypeScript,
+  using modern, component-centered web application frameworks.
 
 ** Project Layout
 Given the STOCKS Application's monorepo architecture,
